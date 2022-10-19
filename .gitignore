@@ -1,0 +1,6 @@
+.terraform
+.terraform.lock.hcl
+terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+inspo_script.py
