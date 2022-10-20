@@ -12,69 +12,15 @@ def mocked_responses():
 def test_call_to_kraken_add_order_endpoint_is_made(mocked_responses, ticker, current_market_bid, expected_bid_price):
     mocked_responses.get(
         url=f"https://api.kraken.com/0/public/Ticker?pair={ticker}",
-        json=
-            {
-  "result": {
-    ticker: {
-      "a": [
-        "string"
-      ],
-      "b": [
-        current_market_bid
-      ],
-      "c": [
-        "string"
-      ],
-      "v": [
-        "string"
-      ],
-      "p": [
-        "string"
-      ],
-      "t": [
-        0
-      ],
-      "l": [
-        "string"
-      ],
-      "h": [
-        "string"
-      ],
-      "o": "string"
-    },
-    "pair2": {
-      "a": [
-        "string"
-      ],
-      "b": [
-        "string"
-      ],
-      "c": [
-        "string"
-      ],
-      "v": [
-        "string"
-      ],
-      "p": [
-        "string"
-      ],
-      "t": [
-        0
-      ],
-      "l": [
-        "string"
-      ],
-      "h": [
-        "string"
-      ],
-      "o": "string"
-    }
-  },
-  "error": [
-    "EGeneral:Invalid arguments"
-  ]
-}
-        
+        json={
+            "result": {
+                ticker: {
+                    "b": [
+                        current_market_bid
+                    ],
+                }
+            }
+        }
     )
     mocked_responses.post(
         url = "https://api.kraken.com/0/private/AddOrder",
