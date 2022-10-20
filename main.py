@@ -9,7 +9,7 @@ def place_limit_order(ticker:str, eur_budget:float):
         json={
                 "ordertype": "limit",
                 "type": "buy",
-                "volume": 0.002,
+                "volume": "0.002",
                 "price": "19200.1",
                 "pair": ticker
         }
