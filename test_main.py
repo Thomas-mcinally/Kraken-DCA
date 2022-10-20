@@ -7,9 +7,6 @@ def mocked_responses():
     with responses.RequestsMock() as rsps:
         yield rsps
 
-def test_input_arguments_exist():
-    place_limit_order(ticker="ETH-USD", amount_to_purchase=0.002, leverage=0.0, limit_price=129.1)
-
 def test_call_to_kraken_add_order_endpoint_is_made(mocked_responses):
     mocked_responses.post("https://api.kraken.com/0/private/AddOrder")
     

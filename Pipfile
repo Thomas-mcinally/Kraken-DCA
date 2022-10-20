@@ -9,6 +9,10 @@ requests = "*"
 [dev-packages]
 pytest = "*"
 responses = "*"
+pytest-socket = "*"
 
 [requires]
 python_version = "3.10"
+
+[scripts]
+test = "pytest --disable-socket"
