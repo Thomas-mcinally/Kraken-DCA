@@ -15,7 +15,7 @@ def mocked_responses():
         ("XXBTZUSD", "19200.125678723", 0.5, "19200.125678", "2.6041496206085407e-05"),
     ]
 )
-def test_call_to_kraken_add_order_endpoint_is_made(mocked_responses, ticker, current_market_bid, eur_budget, expected_bid_price, expected_trade_volume):
+def test_calls_to_kraken_endpoints_are_made_with_values_calculated_from_inputs(mocked_responses, ticker, current_market_bid, eur_budget, expected_bid_price, expected_trade_volume):
     mocked_responses.get(
         url=f"https://api.kraken.com/0/public/Ticker?pair={ticker}",
         json={
@@ -48,9 +48,6 @@ def test_call_to_kraken_add_order_endpoint_is_made(mocked_responses, ticker, cur
 
 # list of specs:
 
-
-# - Look into if Decimal would make my calculations more reliable than float?
-# - Abstract volume calculation to separate function
 # - include nonce in payload (always rising integer. Use unix timestamp)
 # - Header called "API-Key" should contain api keyname
 # - Header called "API-Sign" (generated with your private key, nonce, encoded payload, and URI path)
