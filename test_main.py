@@ -9,13 +9,13 @@ def mocked_responses():
         yield rsps
 
 @pytest.mark.parametrize(
-    "ticker, current_market_bid, expected_bid_price, expected_trade_volume",
+    "ticker, current_market_bid, eur_budget, expected_bid_price, expected_trade_volume",
     [
-        ("ETHUSD", "192.125678123", "192.125678", "0.05725418962477259"),
-        ("XXBTZUSD", "19200.125678123", "19200.125678", "0.0005729129165338789"),
+        ("ETHUSD", "192.125678123", 11, "192.125678", "0.05725418962477259"),
+        ("XXBTZUSD", "19200.125678123", 0.5, "19200.125678", "2.6041496206085407e-05"),
     ]
 )
-def test_call_to_kraken_add_order_endpoint_is_made(mocked_responses, ticker, current_market_bid, expected_bid_price, expected_trade_volume):
+def test_call_to_kraken_add_order_endpoint_is_made(mocked_responses, ticker, current_market_bid, eur_budget, expected_bid_price, expected_trade_volume):
     mocked_responses.get(
         url=f"https://api.kraken.com/0/public/Ticker?pair={ticker}",
         json={
@@ -41,7 +41,7 @@ def test_call_to_kraken_add_order_endpoint_is_made(mocked_responses, ticker, cur
         ]
         )
     
-    place_limit_order(ticker=ticker, eur_budget=11)
+    place_limit_order(ticker=ticker, eur_budget=eur_budget)
 
 
 
