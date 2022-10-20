@@ -20,6 +20,7 @@ def test_call_to_kraken_add_order_endpoint_is_made(mocked_responses, ticker):
                 "ordertype": "limit",
                 "type": "buy",
                 "volume": 0.002,
+                "price": "19200.1",
                 "pair": ticker
             })
         ]
