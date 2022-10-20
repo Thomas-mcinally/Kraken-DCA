@@ -11,8 +11,8 @@ def mocked_responses():
 @pytest.mark.parametrize(
     "ticker, current_market_bid, eur_budget, expected_bid_price, expected_trade_volume",
     [
-        ("ETHUSD", "192.125678123", 11, "192.125678", "0.05725418962477259"),
-        ("XXBTZUSD", "19200.125678123", 0.5, "19200.125678", "2.6041496206085407e-05"),
+        ("ETHUSD", "192.125678723", 11, "192.125678", "0.05725418962477259"),
+        ("XXBTZUSD", "19200.125678723", 0.5, "19200.125678", "2.6041496206085407e-05"),
     ]
 )
 def test_call_to_kraken_add_order_endpoint_is_made(mocked_responses, ticker, current_market_bid, eur_budget, expected_bid_price, expected_trade_volume):
@@ -47,9 +47,10 @@ def test_call_to_kraken_add_order_endpoint_is_made(mocked_responses, ticker, cur
 
 
 # list of specs:
+
+
+# - Look into if Decimal would make my calculations more reliable than float?
+# - Abstract volume calculation to separate function
 # - include nonce in payload (always rising integer. Use unix timestamp)
 # - Header called "API-Key" should contain api keyname
 # - Header called "API-Sign" (generated with your private key, nonce, encoded payload, and URI path)
-# - pass required body params
-
-# - Look up and change pair body parameter value later on
