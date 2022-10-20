@@ -7,6 +7,6 @@ def place_limit_order(ticker:str, amount_to_purchase:float, leverage:float, limi
                 "ordertype": "limit",
                 "type": "buy",
                 "volume": 0.002,
-                "pair": "ETH-USD"
+                "pair": ticker
         }
     )

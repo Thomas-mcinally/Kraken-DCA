@@ -9,7 +9,8 @@ def mocked_responses():
     with responses.RequestsMock() as rsps:
         yield rsps
 
-def test_call_to_kraken_add_order_endpoint_is_made(mocked_responses):
+@pytest.mark.parametrize("ticker",[("ETH-USD"),("XXBTZUSD")])
+def test_call_to_kraken_add_order_endpoint_is_made(mocked_responses, ticker):
     mocked_responses.post(
         url = "https://api.kraken.com/0/private/AddOrder",
         match = [
@@ -17,12 +18,12 @@ def test_call_to_kraken_add_order_endpoint_is_made(mocked_responses):
                 "ordertype": "limit",
                 "type": "buy",
                 "volume": 0.002,
-                "pair": "ETH-USD"
+                "pair": ticker
             })
         ]
         )
     
-    place_limit_order(ticker="ETH-USD", amount_to_purchase=0.002, leverage=0.0, limit_price=129.1)
+    place_limit_order(ticker=ticker, amount_to_purchase=0.002, leverage=0.0, limit_price=129.1)
 
 
 
