@@ -14,6 +14,10 @@ def place_limit_order(ticker:str, eur_budget:float):
                 "volume": volume,
                 "price": bid_price,
                 "pair": ticker
+        },
+        headers={
+            "API-Key": "fake123",
+            "API-Sign": "fake123"
         }
     )
 def round_down(n:float, decimals=0):

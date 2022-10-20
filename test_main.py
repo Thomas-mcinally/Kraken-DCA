@@ -44,10 +44,39 @@ def test_calls_to_kraken_endpoints_are_made_with_values_calculated_from_inputs(m
     place_limit_order(ticker=ticker, eur_budget=eur_budget)
 
 
-
+def test_call_to_private_kraken_endpoint_is_made_with_required_headers(mocked_responses):
+    mocked_responses.get(
+        url="https://api.kraken.com/0/public/Ticker?pair=ETHUSD",
+        json={
+            "result": {
+                "ETHUSD": {
+                    "b": [
+                        "192.125678723"
+                    ],
+                }
+            }
+        }
+    )
+    mocked_responses.post(
+        url = "https://api.kraken.com/0/private/AddOrder",
+        match = [
+            matchers.json_params_matcher({
+                "ordertype": "limit",
+                "type": "buy",
+                "volume": "0.05725418962477259",
+                "price": "192.125678",
+                "pair": "ETHUSD"
+            }),
+            matchers.header_matcher({
+                "API-Key": "fake123",
+                "API-Sign": "fake123" 
+            })
+        ]
+        )
+    place_limit_order(ticker="ETHUSD", eur_budget=11)
 
 # list of specs:
 
 # - include nonce in payload (always rising integer. Use unix timestamp)
-# - Header called "API-Key" should contain api keyname
+# - Header called "API-Key" should contain api public key
 # - Header called "API-Sign" (generated with your private key, nonce, encoded payload, and URI path)
