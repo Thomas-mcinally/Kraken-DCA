@@ -23,7 +23,7 @@ def test_call_to_kraken_add_order_endpoint_is_made(mocked_responses, ticker):
         ]
         )
     
-    place_limit_order(ticker=ticker, amount_to_purchase=0.002, leverage=0.0, limit_price=129.1)
+    place_limit_order(ticker=ticker, eur_budget=11)
 
 
 
