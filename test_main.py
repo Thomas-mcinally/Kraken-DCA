@@ -41,15 +41,15 @@ def test_calls_to_kraken_endpoints_are_made_with_values_calculated_from_inputs(m
         ]
         )
     
-    place_limit_order(ticker=ticker, eur_budget=eur_budget)
+    place_limit_order(ticker=ticker, eur_budget=eur_budget, private_key="123")
 
 
-def test_call_to_private_kraken_endpoint_is_made_with_required_headers(mocked_responses):
+def test_call_to_private_kraken_endpoint_is_made_with_required_headers(mocked_responses, mocker):
     mocked_responses.get(
-        url="https://api.kraken.com/0/public/Ticker?pair=ETHUSD",
+        url="https://api.kraken.com/0/public/Ticker?pair=XBTUSD",
         json={
             "result": {
-                "ETHUSD": {
+                "XBTUSD": {
                     "b": [
                         "192.125678723"
                     ],
@@ -65,18 +65,22 @@ def test_call_to_private_kraken_endpoint_is_made_with_required_headers(mocked_re
                 "type": "buy",
                 "volume": "0.05725418962477259",
                 "price": "192.125678",
-                "pair": "ETHUSD"
+                "pair": "XBTUSD"
             }),
             matchers.header_matcher({
                 "API-Key": "fake123",
-                "API-Sign": "fake123" 
+                "API-Sign": "4/dpxb3iT4tp/ZCVEwSnEsLxx0bqyhLpdfOpc6fn7OR8+UClSV5n9E6aSS8MPtnRfp32bAb0nmbRn6H8ndwLUQ==" 
             })
         ]
         )
-    place_limit_order(ticker="ETHUSD", eur_budget=11)
+
+    mocker.patch("time.time", return_value=1616492376.594)
+
+    place_limit_order(ticker="XBTUSD", eur_budget=11, private_key="kQH5HW/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==")
+
 
 # list of specs:
-
+# Enforce dynamic generation of digital signature. 
+    #  got correct formula. Now just need to parametrize all the components that go into making it, and the final signature resulting from these
 # - include nonce in payload (always rising integer. Use unix timestamp)
 # - Header called "API-Key" should contain api public key
-# - Header called "API-Sign" (generated with your private key, nonce, encoded payload, and URI path)
