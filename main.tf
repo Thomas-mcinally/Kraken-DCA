@@ -52,12 +52,6 @@ resource "aws_ssm_parameter" "kraken-private-api-key" {
 }
 
 
-resource "aws_s3_bucket" "dca-script-bucket" {
-  bucket = "dca-script-bucket"
-}
-
-
-
 resource "aws_iam_role" "iam-for-lambda" {
   name = "iam-for-lambda"
 
