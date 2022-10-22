@@ -9,3 +9,4 @@ env.py
 *.zip
 python
 requirements.txt
+dependencies
