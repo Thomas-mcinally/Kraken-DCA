@@ -6,7 +6,7 @@ import time
 import requests
 import pytest
 
-def place_limit_order(ticker:str, eur_budget:float, private_key:str):
+def place_limit_order(ticker:str, eur_budget:float, private_key:str, public_key:str):
 
     bid_price:str = get_bid_price(ticker)
     volume:str = get_trade_volume(eur_budget, bid_price)
@@ -24,7 +24,7 @@ def place_limit_order(ticker:str, eur_budget:float, private_key:str):
                 "nonce": nonce
         },
         headers={
-            "API-Key": "fake123",
+            "API-Key": public_key,
             "API-Sign": api_sign
         }
     )

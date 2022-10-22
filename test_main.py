@@ -42,18 +42,18 @@ def test_calls_to_kraken_endpoints_are_made_with_values_calculated_from_inputs(m
         ]
         )
     mocker.patch("time.time", return_value=current_time)
-    place_limit_order(ticker=ticker, eur_budget=eur_budget, private_key="kQH5HW/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==")
+    place_limit_order(ticker=ticker, eur_budget=eur_budget, private_key="kQH5HW/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==", public_key="111")
 
 
 
 @pytest.mark.parametrize(
-    "ticker, current_market_bid, eur_budget, current_time, private_key, expected_api_Sign",
+    "ticker, current_market_bid, eur_budget, current_time, private_key, expected_api_Sign, public_key",
     [
-        ("ETHUSD", "192.125678723", 11, 1616492376.594, "kQH5HW/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==", "l8th/OmRDGpwfHAoOCIuZF+c9X37krK1KELhRUoEcQU2Si3gHtCY/mPeIgw7saRe1fREa6vfMDIUSEs6ov+fEQ=="),
-        ("XXBTZUSD", "19200.125678723", 0.5, 1111111111.594, "111111/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==", "HxAjpPcHJZDU3dRdaBtZ312pqV2pD3zaeglYxpmeEjgVUUlJ62m8QQbjjmyVm2X+gc491tCdwKAIW1ACJJxvGA=="),
+        ("ETHUSD", "192.125678723", 11, 1616492376.594, "kQH5HW/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==", "l8th/OmRDGpwfHAoOCIuZF+c9X37krK1KELhRUoEcQU2Si3gHtCY/mPeIgw7saRe1fREa6vfMDIUSEs6ov+fEQ==", "fake111"),
+        ("XXBTZUSD", "19200.125678723", 0.5, 1111111111.594, "111111/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==", "HxAjpPcHJZDU3dRdaBtZ312pqV2pD3zaeglYxpmeEjgVUUlJ62m8QQbjjmyVm2X+gc491tCdwKAIW1ACJJxvGA==", "fake222"),
     ]
 )
-def test_call_to_private_kraken_endpoint_is_made_with_required_headers_and_nonce_is_included_in_body(mocked_responses, mocker, ticker, current_market_bid, eur_budget, current_time, private_key, expected_api_Sign):
+def test_call_to_private_kraken_endpoint_is_made_with_required_headers_and_nonce_is_included_in_body(mocked_responses, mocker, ticker, current_market_bid, eur_budget, current_time, private_key, expected_api_Sign, public_key):
     mocked_responses.get(
         url=f"https://api.kraken.com/0/public/Ticker?pair={ticker}",
         json={
@@ -70,7 +70,7 @@ def test_call_to_private_kraken_endpoint_is_made_with_required_headers_and_nonce
         url = "https://api.kraken.com/0/private/AddOrder",
         match = [
             matchers.header_matcher({
-                "API-Key": "fake123",
+                "API-Key": public_key,
                 "API-Sign": expected_api_Sign 
             })
         ]
@@ -78,11 +78,10 @@ def test_call_to_private_kraken_endpoint_is_made_with_required_headers_and_nonce
 
     mocker.patch("time.time", return_value=current_time)
 
-    place_limit_order(ticker=ticker, eur_budget=eur_budget, private_key=private_key)
+    place_limit_order(ticker=ticker, eur_budget=eur_budget, private_key=private_key, public_key=public_key)
 
 
 
 # list of specs:
-# - include nonce in payload (always rising integer. Use unix timestamp)
 # - Header called "API-Key" should contain api public key
 
