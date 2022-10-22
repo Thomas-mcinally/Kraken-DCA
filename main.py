@@ -10,8 +10,8 @@ def place_limit_order(ticker:str, eur_budget:float, private_key:str):
 
     bid_price:str = get_bid_price(ticker)
     volume:str = get_trade_volume(eur_budget, bid_price)
-
-    api_sign = get_api_sign(nonce=str(int(time.time()*1000)), ticker=ticker, bid_price=bid_price, volume=volume, private_key=private_key)
+    nonce:int = int(time.time()*1000)
+    api_sign = get_api_sign(nonce=str(nonce), ticker=ticker, bid_price=bid_price, volume=volume, private_key=private_key)
     
     requests.post(
         url="https://api.kraken.com/0/private/AddOrder",
@@ -20,7 +20,8 @@ def place_limit_order(ticker:str, eur_budget:float, private_key:str):
                 "type": "buy",
                 "volume": volume,
                 "price": bid_price,
-                "pair": ticker
+                "pair": ticker,
+                "nonce": nonce
         },
         headers={
             "API-Key": "fake123",
