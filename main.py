@@ -3,7 +3,6 @@ import hashlib
 import hmac
 import math
 import time
-
 import requests
 
 
@@ -53,5 +52,3 @@ def get_bid_price(ticker:str) -> str:
 
 def get_trade_volume(budget:float, bid_price:str) -> str:
     return str(budget/float(bid_price))
-
-# TODO: Am i passing arguments correctly? Should it be in body or in a header??
