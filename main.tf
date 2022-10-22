@@ -34,6 +34,23 @@ resource "aws_ssm_parameter" "kraken-dca-ada-amount" {
     ignore_changes = [value]
   }
 }
+resource "aws_ssm_parameter" "kraken-public-api-key" {
+  name  = "kraken-public-api-key"
+  type  = "SecureString"
+  value = "SET MANUALLY IN AWS CONSOLE"
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
+resource "aws_ssm_parameter" "kraken-private-api-key" {
+  name  = "kraken-private-api-key"
+  type  = "SecureString"
+  value = "SET MANUALLY IN AWS CONSOLE"
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
+
 
 resource "aws_s3_bucket" "dca-script-bucket" {
   bucket = "dca-script-bucket"
@@ -41,24 +58,29 @@ resource "aws_s3_bucket" "dca-script-bucket" {
 
 
 
-# resource "aws_iam_role" "iam-for-lambda" {
-#   name = "iam-for-lambda"
+resource "aws_iam_role" "iam-for-lambda" {
+  name = "iam-for-lambda"
 
-#   assume_role_policy = <<EOF
-# {
-#   "Version": "2012-10-17",
-#   "Statement": [
-#     {
-#       "Action": "sts:AssumeRole",
-#       "Principal": {
-#         "Service": "lambda.amazonaws.com"
-#       },
-#       "Effect": "Allow",
-#       "Sid": ""
-#     }
-#   ]
-# }
-# EOF
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+# resource "aws_iam_role_policy_attachment" "kraken_dca_lambda_policy" {
+#   role       = aws_iam_role.iam-for-lambda.name
+#   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 # }
 
 # resource "aws_lambda_function" "btc-dca-lambda" {
@@ -74,9 +96,9 @@ resource "aws_s3_bucket" "dca-script-bucket" {
 
 #   role = aws_iam_role.iam-for-lambda.arn
 
-#   # environment {
-#   #   variables = {
-#   #     foo = "bar"
-#   #   }
-#   # }
-# }
+  # environment {
+  #   variables = {
+  #     foo = "bar"
+  #   }
+  # }
+}

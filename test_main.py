@@ -1,4 +1,4 @@
-from main import place_limit_order
+from btc_dca_script import place_limit_order
 import pytest
 import responses
 from responses import matchers

@@ -4,15 +4,16 @@ import hmac
 import math
 import time
 import requests
+import boto3
 
 
-def place_limit_order(trading_pair:str, budget:float, private_key:str, public_key:str):
+def place_limit_order(trading_pair:str, budget:float, private_key:str, public_key:str) -> requests.Response:
     bid_price:str = get_bid_price(trading_pair)
     volume:str = get_trade_volume(budget, bid_price)
     nonce:int = int(time.time()*1000)
     api_sign:str = get_api_sign(nonce=str(nonce), trading_pair=trading_pair, bid_price=bid_price, volume=volume, private_key=private_key)
 
-    requests.post(
+    response = requests.post(
         url="https://api.kraken.com/0/private/AddOrder",
         data={
                 "nonce": nonce,
@@ -27,6 +28,7 @@ def place_limit_order(trading_pair:str, budget:float, private_key:str, public_ke
             "API-Sign": api_sign
         }
     )
+    return response
 
 def round_down(n:float, decimals:int):
     multiplier = 10 ** decimals
@@ -51,3 +53,16 @@ def get_bid_price(trading_pair:str) -> str:
 
 def get_trade_volume(budget:float, bid_price:str) -> str:
     return str(budget/float(bid_price))
+
+def lambda_handler(event, context):
+    client = boto3.client('ssm')
+    budget = client.get_parameter(Name="kraken-dca-BTC-daily-purchase-amount")["Parameter"]["Value"]
+    private_key = client.get_parameter(Name="kraken-private-api-key")["Parameter"]["Value"]
+    public_key = client.get_parameter(Name="kraken-public-api-key")["Parameter"]["Value"]
+
+    response = place_limit_order(trading_pair='XXBTZEUR', budget=budget, private_key=private_key, public_key=public_key)
+
+    return {
+        'statusCode': 200,
+        'body': response.body
+    }
