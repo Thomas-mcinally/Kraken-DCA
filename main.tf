@@ -78,27 +78,33 @@ resource "aws_iam_role" "iam-for-lambda" {
 EOF
 }
 
-# resource "aws_iam_role_policy_attachment" "kraken_dca_lambda_policy" {
-#   role       = aws_iam_role.iam-for-lambda.name
-#   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-# }
 
-# resource "aws_lambda_function" "btc-dca-lambda" {
-#   function_name = "btc-dca-lambda"
+resource "aws_iam_role_policy_attachment" "kraken_dca_lambda_policy" {
+  role       = aws_iam_role.iam-for-lambda.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+resource "aws_iam_role_policy_attachment" "kraken_dca_lambda_access_to_ssm" {
+  role       = aws_iam_role.iam-for-lambda.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
+}
 
-#   s3_bucket = aws_s3_bucket.dca-script-bucket.id
-#   s3_key = "btc_dca_script.zip"
+
+
+resource "aws_lambda_layer_version" "kraken_dca_dependencies" {
+  filename   = "layer.zip"
+  layer_name = "kraken_dca_dependencies"
+}
+
+
+resource "aws_lambda_function" "btc-dca-lambda" {
+  function_name = "btc-dca-lambda"
+
+  filename = "python_code.zip"
   
-#   runtime = "python3.8"
-#   handler = "btc_dca_script.lambda_handler"
+  runtime = "python3.8"
+  handler = "btc_dca_script.lambda_handler"
 
-#   source_code_hash = filebase64sha256("btc_dca_script.zip")
+  layers = [aws_lambda_layer_version.kraken_dca_dependencies.arn]
 
-#   role = aws_iam_role.iam-for-lambda.arn
-
-  # environment {
-  #   variables = {
-  #     foo = "bar"
-  #   }
-  # }
+  role = aws_iam_role.iam-for-lambda.arn
 }

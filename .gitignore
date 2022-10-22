@@ -6,3 +6,6 @@ terraform.tfstate.backup
 inspo_script.py
 .env
 env.py
+*.zip
+python
+requirements.txt

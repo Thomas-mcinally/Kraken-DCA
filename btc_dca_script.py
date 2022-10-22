@@ -56,12 +56,12 @@ def get_trade_volume(budget:float, bid_price:str) -> str:
 
 def lambda_handler(event, context):
     client = boto3.client('ssm')
-    budget = client.get_parameter(Name="kraken-dca-BTC-daily-purchase-amount")["Parameter"]["Value"]
-    private_key = client.get_parameter(Name="kraken-private-api-key")["Parameter"]["Value"]
-    public_key = client.get_parameter(Name="kraken-public-api-key")["Parameter"]["Value"]
-
+    budget = float(client.get_parameter(Name="kraken-dca-BTC-daily-purchase-amount", WithDecryption=True)["Parameter"]["Value"])
+    private_key = client.get_parameter(Name="kraken-private-api-key", WithDecryption=True)["Parameter"]["Value"]
+    public_key = client.get_parameter(Name="kraken-public-api-key", WithDecryption=True)["Parameter"]["Value"]
+    
     response = place_limit_order(trading_pair='XXBTZEUR', budget=budget, private_key=private_key, public_key=public_key)
-
+    
     return {
         'statusCode': 200,
         'body': response.body
