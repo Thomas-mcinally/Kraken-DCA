@@ -18,22 +18,6 @@ resource "aws_ssm_parameter" "kraken-dca-btc-amount" {
     ignore_changes = [value]
   }
 }
-resource "aws_ssm_parameter" "kraken-dca-eth-amount" {
-  name  = "kraken-dca-ETH-daily-purchase-amount"
-  type  = "SecureString"
-  value = "SET MANUALLY IN AWS CONSOLE"
-  lifecycle {
-    ignore_changes = [value]
-  }
-}
-resource "aws_ssm_parameter" "kraken-dca-ada-amount" {
-  name  = "kraken-dca-ADA-daily-purchase-amount"
-  type  = "SecureString"
-  value = "SET MANUALLY IN AWS CONSOLE"
-  lifecycle {
-    ignore_changes = [value]
-  }
-}
 resource "aws_ssm_parameter" "kraken-public-api-key" {
   name  = "kraken-public-api-key"
   type  = "SecureString"
