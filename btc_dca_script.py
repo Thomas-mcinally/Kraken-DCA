@@ -30,7 +30,7 @@ def place_limit_order(trading_pair:str, budget:float, private_key:str, public_ke
     )
     return response
 
-def round_down(n:float, decimals:int):
+def round_down(n:float, decimals:int) -> float:
     multiplier = 10 ** decimals
     return math.floor(n * multiplier) / multiplier
 
