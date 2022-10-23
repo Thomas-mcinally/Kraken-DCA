@@ -1,0 +1,42 @@
+---
+name: Terraform apply
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tf_apply:
+    name: Terraform apply
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout Repo
+      uses: actions/checkout@v1
+
+    - name: Install pipenv
+      shell: bash
+      run: pipx install pipenv
+
+    - run: pipenv requirements --exclude-markers > requirements.txt
+    - run: mkdir dependencies
+    - run: mkdir dependencies/python
+    - run: docker run --rm \        
+          --volume=$(pwd):/lambda-build \
+          -w=/lambda-build \
+          lambci/lambda:build-python3.8 \
+          pip install -r requirements.txt --target dependencies/python
+
+    - name: Terraform Init
+      uses: hashicorp/terraform-github-actions/init@v0.4.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Terraform Apply
+      uses: hashicorp/terraform-github-actions/apply@v0.4.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
