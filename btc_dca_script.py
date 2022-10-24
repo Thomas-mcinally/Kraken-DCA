@@ -35,8 +35,8 @@ def round_down(n:float, decimals:int) -> float:
     return math.floor(n * multiplier) / multiplier
 
 def get_api_sign(nonce:str, trading_pair:str, bid_price:str, volume:str, private_key:str) ->str:
-    api_path = '/0/private/AddOrder'
-    api_post=f'nonce={nonce}&ordertype=limit&pair={trading_pair}&price={bid_price}&type=buy&volume={volume}'
+    api_path:str = '/0/private/AddOrder'
+    api_post:str = f'nonce={nonce}&ordertype=limit&pair={trading_pair}&price={bid_price}&type=buy&volume={volume}'
 
     api_sha256:hashlib._Hash = hashlib.sha256(nonce.encode() + api_post.encode())
     api_hmac:hmac.HMAC = hmac.new(base64.b64decode(private_key), api_path.encode() + api_sha256.digest(), hashlib.sha512)
@@ -46,8 +46,8 @@ def get_api_sign(nonce:str, trading_pair:str, bid_price:str, volume:str, private
 
 def get_bid_price(trading_pair:str) -> str:
     market_data:dict = requests.get(url=f"https://api.kraken.com/0/public/Ticker?pair={trading_pair}").json()
-    top_market_bid = float(market_data["result"][trading_pair]["b"][0])
-    my_bid_price = str(round_down(top_market_bid, decimals=6))
+    top_market_bid:float = float(market_data["result"][trading_pair]["b"][0])
+    my_bid_price:str = str(round_down(top_market_bid, decimals=6))
     return my_bid_price
 
 def get_trade_volume(budget:float, bid_price:str) -> str:
@@ -55,7 +55,7 @@ def get_trade_volume(budget:float, bid_price:str) -> str:
 
 def get_aws_ssm_securestring_parameter(paramname:str) -> str:
     client = boto3.client('ssm')
-    securestring = client.get_parameter(Name=paramname, WithDecryption=True)["Parameter"]["Value"]
+    securestring:str = client.get_parameter(Name=paramname, WithDecryption=True)["Parameter"]["Value"]
     return securestring
 
 def lambda_handler(event, context):
