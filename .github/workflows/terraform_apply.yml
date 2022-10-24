@@ -33,7 +33,8 @@ jobs:
     - name: setup terraform
       uses: hashicorp/setup-terraform@v2
 
-
+    - run: cd terraform
+    
     - name: Terraform Init
       id: init
       run: terraform init
