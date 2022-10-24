@@ -12,9 +12,13 @@ pytest = "*"
 responses = "*"
 pytest-socket = "*"
 pytest-mock = "*"
+autoflake = "*"
+black = "*"
 
 [requires]
 python_version = "3.10"
 
 [scripts]
 test = "pytest --disable-socket"
+format = "bash -c \"autoflake --remove-all-unused-imports -i -r . && black .\""
+format-check = "bash -c \"autoflake --remove-all-unused-imports -c -r . && black --check --diff .\""
