@@ -1,0 +1,10 @@
+[flake8]
+ignore =
+    # Ignore some errors because we prefer Black style over flake8.
+    # Flake8 linting still useful for things like unused imports.
+    E203,  # whitespace before ':'
+    E501,  # line too long (85 > 79 characters)
+    W503,  # line break before binary operator
+    E711,  # comparison to None should be 'if cond is None:'
+    E712,  # comparison to False should be 'if cond is False:' or 'if not cond:'
+    F401,  # imported but unused

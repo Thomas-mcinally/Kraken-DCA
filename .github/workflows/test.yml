@@ -7,6 +7,24 @@ on:
   pull_request:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git clone the repository
+        uses: actions/checkout@v3
+      - name: Install pipenv
+        shell: bash
+        run: pipx install pipenv
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+          cache: "pipenv"
+      - name: Pipenv install
+        shell: bash
+        run: pipenv install --dev
+      - run: pipenv run format-check
+      - run: pipenv run lint
   test:
     runs-on: ubuntu-latest
     steps:
