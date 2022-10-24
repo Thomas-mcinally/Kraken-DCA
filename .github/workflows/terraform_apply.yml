@@ -32,13 +32,11 @@ jobs:
 
     - name: setup terraform
       uses: hashicorp/setup-terraform@v2
-
-    - run: cd terraform
     
     - name: Terraform Init
       id: init
-      run: terraform init
+      run: cd terraform && terraform init
 
     - name: Terraform Apply
       id: apply
-      run: terraform apply -auto-approve
+      run: cd terraform && terraform apply -auto-approve
