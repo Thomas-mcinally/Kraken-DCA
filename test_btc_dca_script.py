@@ -1,4 +1,4 @@
-from btc_dca_script import place_limit_order
+from btc_dca_script import place_limit_order_on_kraken
 import pytest
 import responses
 from responses import matchers
@@ -70,7 +70,7 @@ def test_calls_to_kraken_endpoints_are_made_with_values_calculated_from_inputs(
         ],
     )
     mocker.patch("time.time", return_value=current_time)
-    place_limit_order(
+    place_limit_order_on_kraken(
         trading_pair=trading_pair,
         budget=budget,
         private_key="kQH5HW/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==",
@@ -133,7 +133,7 @@ def test_call_to_private_kraken_endpoint_is_made_with_required_headers_and_nonce
 
     mocker.patch("time.time", return_value=current_time)
 
-    place_limit_order(
+    place_limit_order_on_kraken(
         trading_pair=trading_pair,
         budget=budget,
         private_key=private_key,

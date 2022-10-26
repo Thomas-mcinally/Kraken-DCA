@@ -7,7 +7,7 @@ import requests
 import boto3
 
 
-def place_limit_order(
+def place_limit_order_on_kraken(
     trading_pair: str, budget: float, private_key: str, public_key: str
 ) -> requests.Response:
     bid_price: str = get_bid_price(trading_pair)
@@ -86,7 +86,7 @@ def lambda_handler(event, context):
     private_key: str = get_aws_ssm_securestring_parameter("kraken-private-api-key")
     public_key: str = get_aws_ssm_securestring_parameter("kraken-public-api-key")
 
-    response = place_limit_order(
+    response = place_limit_order_on_kraken(
         trading_pair="XXBTZEUR",
         budget=budget,
         private_key=private_key,
