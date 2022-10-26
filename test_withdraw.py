@@ -25,8 +25,14 @@ def test_call_to_kraken_balance_endpoint_is_made(mocked_responses, mocker, curre
                     'nonce': expected_nonce
                 }
             )
-        ]
+        ],
+        json={
+            "result": {
+                "ZUSD": "2970172.7962"
+            },
+            "error": []
+        }
     )
     mocker.patch("time.time", return_value=current_time)
-    
+
     withdraw_crypto_from_kraken()
