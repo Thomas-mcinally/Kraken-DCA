@@ -8,5 +8,5 @@ def withdraw_crypto_from_kraken():
         url='https://api.kraken.com/0/private/Balance',
         data={'nonce':nonce}
     )
-    requests.post(url='https://api.kraken.com/0/private/Withdraw', data={'nonce':nonce})
+    requests.post(url='https://api.kraken.com/0/private/Withdraw', data={'nonce':nonce, 'asset': 'XXBTZ'})
 

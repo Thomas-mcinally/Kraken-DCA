@@ -39,7 +39,8 @@ def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made(mocked_response
         match=[
             matchers.urlencoded_params_matcher(
                 {
-                    'nonce': expected_nonce
+                    'nonce': expected_nonce,
+                    'asset': 'XXBTZ',
                 }
             )
         ],
