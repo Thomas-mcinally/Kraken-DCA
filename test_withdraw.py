@@ -33,13 +33,24 @@ def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made(mocked_response
             "error": []
         }
     )
+    
     mocked_responses.post(
         url='https://api.kraken.com/0/private/Withdraw',
+        match=[
+            matchers.urlencoded_params_matcher(
+                {
+                    'nonce': expected_nonce
+                }
+            )
+        ],
     )
-
-
-
-    
     mocker.patch("time.time", return_value=current_time)
 
     withdraw_crypto_from_kraken()
+
+
+
+
+def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_different_nonces(mocked_responses):
+    # FIGURE OUT HOW TO TEST THIS LATER, CURRENTLY USING SAME NONCE FOR BOTH CALLS
+    pass
