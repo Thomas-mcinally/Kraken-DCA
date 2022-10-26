@@ -10,13 +10,18 @@ def mocked_responses():
 
 
 @pytest.mark.parametrize(
-    "current_time, expected_nonce",
+    "current_time, expected_nonce, asset_to_withdraw",
     [
-        (111.111, '111111'),
-        (222.222, '222222')
+        (111.111, '111111', 'XXBTZ'),
+        (222.222, '222222', 'ETH')
     ],
 )
-def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made(mocked_responses, mocker, current_time, expected_nonce):
+def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made(
+    mocked_responses, 
+    mocker, 
+    current_time, 
+    expected_nonce,
+    asset_to_withdraw):
     mocked_responses.post(
         url='https://api.kraken.com/0/private/Balance',
         match=[
@@ -40,14 +45,14 @@ def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made(mocked_response
             matchers.urlencoded_params_matcher(
                 {
                     'nonce': expected_nonce,
-                    'asset': 'XXBTZ',
+                    'asset': asset_to_withdraw,
                 }
             )
         ],
     )
     mocker.patch("time.time", return_value=current_time)
 
-    withdraw_crypto_from_kraken()
+    withdraw_crypto_from_kraken(asset_to_withdraw=asset_to_withdraw)
 
 
 
