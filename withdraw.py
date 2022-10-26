@@ -11,5 +11,6 @@ def withdraw_crypto_from_kraken(asset_to_withdraw: str, withdrawal_address_key: 
             "nonce": nonce,
             "asset": asset_to_withdraw,
             "key": withdrawal_address_key,
+            "amount": 0.123
         },
     )
