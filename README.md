@@ -3,7 +3,7 @@
   - Works for any cryptocurrency available on Kraken, and any desired purchase interval
 - 90% reduction in trading fees as compared to using the built-in recurring purchase feature in the Kraken mobile app
 
-## Design For purchasing script
+## Design for purchasing script
 - Use `GET https://api.kraken.com/0/public/Ticker?pair={trading_pair}` to get current market price of asset
 - Use `POST https://api.kraken.com/0/private/AddOrder` to create limit order
   - Use limit orders because they have lower fees than market orders
