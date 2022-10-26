@@ -39,7 +39,7 @@ def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made(
                     "nonce": expected_nonce,
                     "asset": asset_to_withdraw,
                     "key": withdrawal_address_key,
-                    "amount": '0.123'
+                    "amount": "0.123",
                 }
             )
         ],
