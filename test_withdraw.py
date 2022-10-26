@@ -16,7 +16,7 @@ def mocked_responses():
         (222.222, '222222')
     ],
 )
-def test_call_to_kraken_balance_endpoint_is_made(mocked_responses, mocker, current_time, expected_nonce):
+def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made(mocked_responses, mocker, current_time, expected_nonce):
     mocked_responses.post(
         url='https://api.kraken.com/0/private/Balance',
         match=[
@@ -33,6 +33,13 @@ def test_call_to_kraken_balance_endpoint_is_made(mocked_responses, mocker, curre
             "error": []
         }
     )
+    mocked_responses.post(
+        url='https://api.kraken.com/0/private/Withdraw',
+    )
+
+
+
+    
     mocker.patch("time.time", return_value=current_time)
 
     withdraw_crypto_from_kraken()
