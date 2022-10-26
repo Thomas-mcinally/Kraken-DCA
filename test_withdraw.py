@@ -9,15 +9,24 @@ def mocked_responses():
         yield rsps
 
 
-def test_call_to_kraken_balance_endpoint_is_made(mocked_responses):
+@pytest.mark.parametrize(
+    "current_time, expected_nonce",
+    [
+        (111.111, '111111'),
+        (222.222, '222222')
+    ],
+)
+def test_call_to_kraken_balance_endpoint_is_made(mocked_responses, mocker, current_time, expected_nonce):
     mocked_responses.post(
         url='https://api.kraken.com/0/private/Balance',
         match=[
             matchers.urlencoded_params_matcher(
                 {
-                    'nonce': '123'
+                    'nonce': expected_nonce
                 }
             )
         ]
     )
+    mocker.patch("time.time", return_value=current_time)
+    
     withdraw_crypto_from_kraken()
