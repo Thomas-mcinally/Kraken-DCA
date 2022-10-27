@@ -65,7 +65,8 @@ def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_different_
 @pytest.mark.parametrize(
     "current_time, private_key, public_key",
     [
-        (99.99, "fake123", "fake123"),
+        (88.88, "fake111", "fake333"),
+        (99.99, "fake222", "fake444"),
     ],
 )
 def test_call_to_balances_endpoint_is_made_with_required_headers_and_nonce_is_included_in_body(
