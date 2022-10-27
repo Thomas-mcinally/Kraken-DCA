@@ -50,7 +50,7 @@ def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made(
     withdraw_crypto_from_kraken(
         asset_to_withdraw=asset_to_withdraw,
         withdrawal_address_key=withdrawal_address_key,
-        private_key="fake123",
+        private_key="kQH5HW/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==",
         public_key="fake123",
     )
 
@@ -63,22 +63,32 @@ def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_different_
 
 
 @pytest.mark.parametrize(
-    "current_time, private_key, public_key",
+    "current_time, private_key, public_key, expected_api_Sign",
     [
-        (88.88, "fake111", "fake333"),
-        (99.99, "fake222", "fake444"),
+        (
+            88.88,
+            "kQH5HW/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==",
+            "fake333",
+            "bR2T+AbzdsepTMgJXnA8TInMDmqGvy6P+LmXdwmfjrdKj9b6HsJcAoNO4AZj4vn+NNZ72JITjgCTt1jhZonTxg==",
+        ),
+        (
+            99.99,
+            "111111/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==",
+            "fake444",
+            "+xvi2JFr0s1f34mfyjXDYDj3YyXj3ZSvdIrGiCZolqwEes3zlGfhz+zKVlZvunalMtiE/6QNrxHkW73UGjM7oQ==",
+        ),
     ],
 )
 def test_call_to_balances_endpoint_is_made_with_required_headers_and_nonce_is_included_in_body(
-    mocked_responses,
-    mocker,
-    current_time,
-    private_key,
-    public_key,
+    mocked_responses, mocker, current_time, private_key, public_key, expected_api_Sign
 ):
     mocked_responses.post(
         url="https://api.kraken.com/0/private/Balance",
-        match=[matchers.header_matcher({"API-Key": public_key})],
+        match=[
+            matchers.header_matcher(
+                {"API-Key": public_key, "API-Sign": expected_api_Sign}
+            )
+        ],
         json={"result": {"BTC": "11"}, "error": []},
     )
     mocked_responses.post(
