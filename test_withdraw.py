@@ -105,23 +105,57 @@ def test_call_to_balances_endpoint_is_made_with_required_auth_headers(
 
 
 @pytest.mark.parametrize(
-    "public_key",
-    [("fake111"), ("fake222")],
+    "public_key, private_key, current_time, asset_to_withdraw, withdrawal_address_key, current_balance, expected_api_sign",
+    [
+        (
+            "fake111",
+            "bbbbbb/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==",
+            11.11,
+            "BTC",
+            "my_BTC_wallet",
+            "44.44",
+            "JPWHyzVIOvQnbKdUwelvbAD0UxTz9sONLzRDeQhyZUQwEdzYu+qPG2t2dd4A3lziQq6zTOAcD90TjPOz2xf2VA==",
+        ),
+        (
+            "fake222",
+            "aaaaaa/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==",
+            22.22,
+            "ETH",
+            "my_ETH_wallet",
+            "55.55",
+            "hiN7gz73W52QgY/m382VYLjuhFpLe78MgeQygig9DAze4xIztu8bi0spfDCjZFIkLIoSq2WHHSMMKeSahxLTaA==",
+        ),
+    ],
 )
 def test_call_to_withdraw_endpoint_is_made_with_required_auth_headers(
-    mocked_responses, public_key
+    mocker,
+    mocked_responses,
+    public_key,
+    private_key,
+    current_time,
+    asset_to_withdraw,
+    withdrawal_address_key,
+    current_balance,
+    expected_api_sign,
 ):
     mocked_responses.post(
         url="https://api.kraken.com/0/private/Balance",
-        json={"result": {"BTC": "11"}, "error": []},
+        json={"result": {asset_to_withdraw: current_balance}, "error": []},
     )
     mocked_responses.post(
         url="https://api.kraken.com/0/private/Withdraw",
-        match=[matchers.header_matcher({"API-Key": public_key})],
+        match=[
+            matchers.header_matcher(
+                {"API-Key": public_key, "API-Sign": expected_api_sign}
+            )
+        ],
     )
+
+    mocker.patch("time.time", return_value=current_time)
+
     withdraw_crypto_from_kraken(
-        asset_to_withdraw="BTC",
-        withdrawal_address_key="BTC_wallet",
-        private_key="kQH5HW/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==",
+        asset_to_withdraw=asset_to_withdraw,
+        withdrawal_address_key=withdrawal_address_key,
+        private_key=private_key,
         public_key=public_key,
     )

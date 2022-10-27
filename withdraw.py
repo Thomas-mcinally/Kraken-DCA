@@ -40,15 +40,24 @@ def withdraw_crypto_from_kraken(
         data={"nonce": nonce},
         headers={"API-Key": public_key, "API-Sign": balance_api_sign},
     )
+    current_balance = balance_response.json()["result"][asset_to_withdraw]
+
+    url_encoded_withdraw_body: str = f"nonce={nonce}&asset={asset_to_withdraw}&key={withdrawal_address_key}&amount={current_balance}"
+    withdraw_api_sign = get_api_sign(
+        api_path="/0/private/Withdraw",
+        urlencoded_body=url_encoded_withdraw_body,
+        nonce=str(nonce),
+        private_key=private_key,
+    )
     requests.post(
         url="https://api.kraken.com/0/private/Withdraw",
         data={
             "nonce": nonce,
             "asset": asset_to_withdraw,
             "key": withdrawal_address_key,
-            "amount": balance_response.json()["result"][asset_to_withdraw],
+            "amount": current_balance,
         },
-        headers={"API-Key": public_key},
+        headers={"API-Key": public_key, "API-Sign": withdraw_api_sign},
     )
 
 
