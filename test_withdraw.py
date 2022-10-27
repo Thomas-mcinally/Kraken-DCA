@@ -79,7 +79,7 @@ def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_different_
         ),
     ],
 )
-def test_call_to_balances_endpoint_is_made_with_required_headers_and_nonce_is_included_in_body(
+def test_call_to_balances_endpoint_is_made_with_required_auth_headers(
     mocked_responses, mocker, current_time, private_key, public_key, expected_api_Sign
 ):
     mocked_responses.post(
