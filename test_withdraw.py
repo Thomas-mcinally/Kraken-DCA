@@ -77,6 +77,7 @@ def test_call_to_balances_endpoint_is_made_with_required_headers_and_nonce_is_in
 ):
     mocked_responses.post(
         url="https://api.kraken.com/0/private/Balance",
+        match=[matchers.header_matcher({"API-Key": public_key})],
         json={"result": {"BTC": "11"}, "error": []},
     )
     mocked_responses.post(

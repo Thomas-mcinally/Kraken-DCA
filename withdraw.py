@@ -10,7 +10,9 @@ def withdraw_crypto_from_kraken(
 ):
     nonce: int = int(time.time() * 1000)
     balance_response = requests.post(
-        url="https://api.kraken.com/0/private/Balance", data={"nonce": nonce}
+        url="https://api.kraken.com/0/private/Balance",
+        data={"nonce": nonce},
+        headers={"API-Key": public_key},
     )
     requests.post(
         url="https://api.kraken.com/0/private/Withdraw",
