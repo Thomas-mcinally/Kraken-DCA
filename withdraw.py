@@ -48,6 +48,7 @@ def withdraw_crypto_from_kraken(
             "key": withdrawal_address_key,
             "amount": balance_response.json()["result"][asset_to_withdraw],
         },
+        headers={"API-Key": public_key},
     )
 
 

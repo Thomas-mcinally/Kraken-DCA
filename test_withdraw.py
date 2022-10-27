@@ -102,3 +102,26 @@ def test_call_to_balances_endpoint_is_made_with_required_auth_headers(
         private_key=private_key,
         public_key=public_key,
     )
+
+
+@pytest.mark.parametrize(
+    "public_key",
+    [("fake111"), ("fake222")],
+)
+def test_call_to_withdraw_endpoint_is_made_with_required_auth_headers(
+    mocked_responses, public_key
+):
+    mocked_responses.post(
+        url="https://api.kraken.com/0/private/Balance",
+        json={"result": {"BTC": "11"}, "error": []},
+    )
+    mocked_responses.post(
+        url="https://api.kraken.com/0/private/Withdraw",
+        match=[matchers.header_matcher({"API-Key": public_key})],
+    )
+    withdraw_crypto_from_kraken(
+        asset_to_withdraw="BTC",
+        withdrawal_address_key="BTC_wallet",
+        private_key="kQH5HW/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==",
+        public_key=public_key,
+    )
