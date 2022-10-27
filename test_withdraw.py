@@ -11,10 +11,10 @@ def mocked_responses():
 
 
 @pytest.mark.parametrize(
-    "current_time, expected_nonce, asset_to_withdraw, withdrawal_address_key",
+    "current_time, expected_nonce, asset_to_withdraw, withdrawal_address_key, current_balance",
     [
-        (111.111, "111111", "XXBTZ", "btc_hardwallet"),
-        (222.222, "222222", "ETH", "eth_hardwallet"),
+        (111.111, "111111", "XXBTZ", "btc_hardwallet", "44.44"),
+        (222.222, "222222", "ETH", "eth_hardwallet", "55.55"),
     ],
 )
 def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made(
@@ -24,11 +24,12 @@ def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made(
     expected_nonce,
     asset_to_withdraw,
     withdrawal_address_key,
+    current_balance,
 ):
     mocked_responses.post(
         url="https://api.kraken.com/0/private/Balance",
         match=[matchers.urlencoded_params_matcher({"nonce": expected_nonce})],
-        json={"result": {"ZUSD": "2970172.7962"}, "error": []},
+        json={"result": {asset_to_withdraw: current_balance}, "error": []},
     )
 
     mocked_responses.post(
@@ -39,7 +40,7 @@ def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made(
                     "nonce": expected_nonce,
                     "asset": asset_to_withdraw,
                     "key": withdrawal_address_key,
-                    "amount": "0.123",
+                    "amount": current_balance,
                 }
             )
         ],
