@@ -20,5 +20,4 @@ def withdraw_crypto_from_kraken(asset_to_withdraw: str, withdrawal_address_key: 
 
 # TODO:
 # - Make sure different nonce is used for the two api calls
-# - Use Use amount from first api call to make second api call
 # - Add authentication headers to both api calls

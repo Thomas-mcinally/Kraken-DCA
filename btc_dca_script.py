@@ -12,12 +12,12 @@ def place_limit_order_on_kraken(
 ) -> requests.Response:
     bid_price: str = get_bid_price(trading_pair)
     volume: str = get_trade_volume(budget, bid_price)
-    nonce: int = int(time.time() * 1000)
+    nonce: str = str(int(time.time() * 1000))
+    url_encoded_body: str = f"nonce={nonce}&ordertype=limit&pair={trading_pair}&price={bid_price}&type=buy&volume={volume}"
     api_sign: str = get_api_sign(
-        nonce=str(nonce),
-        trading_pair=trading_pair,
-        bid_price=bid_price,
-        volume=volume,
+        api_path="/0/private/AddOrder",
+        urlencoded_body=url_encoded_body,
+        nonce=nonce,
         private_key=private_key,
     )
 
@@ -41,13 +41,11 @@ def round_down(n: float, decimals: int) -> float:
     return math.floor(n * multiplier) / multiplier
 
 
-def get_api_sign(
-    nonce: str, trading_pair: str, bid_price: str, volume: str, private_key: str
-) -> str:
-    api_path: str = "/0/private/AddOrder"
-    api_post: str = f"nonce={nonce}&ordertype=limit&pair={trading_pair}&price={bid_price}&type=buy&volume={volume}"
+def get_api_sign(api_path, urlencoded_body, nonce, private_key):
 
-    api_sha256: hashlib._Hash = hashlib.sha256(nonce.encode() + api_post.encode())
+    api_sha256: hashlib._Hash = hashlib.sha256(
+        nonce.encode() + urlencoded_body.encode()
+    )
     api_hmac: hmac.HMAC = hmac.new(
         base64.b64decode(private_key),
         api_path.encode() + api_sha256.digest(),
