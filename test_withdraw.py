@@ -55,11 +55,66 @@ def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made(
     )
 
 
+@pytest.mark.parametrize(
+    "time_of_first_api_call, expected_nonce_of_first_api_call,time_of_second_api_call, expected_nonce_of_second_api_call",
+    [
+        (1.111, "1111", 2.222, "2222"),
+        (3.333, "3333", 4.444, "4444"),
+    ],
+)
 def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_different_nonces(
     mocked_responses,
+    mocker,
+    time_of_first_api_call,
+    expected_nonce_of_first_api_call,
+    time_of_second_api_call,
+    expected_nonce_of_second_api_call,
 ):
-    # FIGURE OUT HOW TO TEST THIS LATER, CURRENTLY USING SAME NONCE FOR BOTH CALLS
-    pass
+    mocked_responses.post(
+        url="https://api.kraken.com/0/private/Balance",
+        match=[
+            matchers.urlencoded_params_matcher(
+                {"nonce": expected_nonce_of_first_api_call}
+            )
+        ],
+        json={"result": {"ETH": "10"}, "error": []},
+    )
+
+    mocked_responses.post(
+        url="https://api.kraken.com/0/private/Withdraw",
+        match=[
+            matchers.urlencoded_params_matcher(
+                {
+                    "nonce": expected_nonce_of_second_api_call,
+                    "asset": "ETH",
+                    "key": "eth_wallet",
+                    "amount": "10",
+                }
+            )
+        ],
+    )
+    mocker.patch(
+        "time.time",
+        side_effect=(
+            time_of_first_api_call,
+            time_of_second_api_call,
+            time_of_second_api_call,
+            time_of_second_api_call,
+            time_of_second_api_call,
+            time_of_second_api_call,
+            time_of_second_api_call,
+            time_of_second_api_call,
+            time_of_second_api_call,
+            time_of_second_api_call,
+        ),
+    )
+    # requests.post calls time function four times, so need to mock time function 10 times
+    withdraw_crypto_from_kraken(
+        asset_to_withdraw="ETH",
+        withdrawal_address_key="eth_wallet",
+        private_key="kQH5HW/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==",
+        public_key="fake123",
+    )
 
 
 @pytest.mark.parametrize(
