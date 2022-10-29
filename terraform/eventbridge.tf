@@ -23,7 +23,7 @@ resource "aws_cloudwatch_event_rule" "kraken_btc_withdraw_lambda_event_rule" {
   schedule_expression = "cron(0 9 1 * ? *)"
 }
 
-resource "aws_cloudwatch_event_target" "kraken_dca_lambda_event_target" {
+resource "aws_cloudwatch_event_target" "btc_withdraw_lambda_event_target" {
   arn = aws_lambda_function.btc-withdraw-lambda.arn
   rule = aws_cloudwatch_event_rule.kraken_btc_withdraw_lambda_event_rule.name
 }
