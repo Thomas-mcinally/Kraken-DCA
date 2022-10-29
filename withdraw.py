@@ -3,6 +3,7 @@ import hashlib
 import hmac
 import time
 import requests
+import boto3
 
 
 def get_api_sign(api_path, urlencoded_body, nonce, private_key):
@@ -27,7 +28,6 @@ def withdraw_crypto_from_kraken(
     public_key: str,
 ):
     nonce_for_first_api_call: int = int(time.time() * 1000)
-
     url_encoded_balance_body: str = f"nonce={nonce_for_first_api_call}"
     balance_api_sign = get_api_sign(
         api_path="/0/private/Balance",
@@ -50,7 +50,7 @@ def withdraw_crypto_from_kraken(
         nonce=str(nonce_for_second_api_call),
         private_key=private_key,
     )
-    requests.post(
+    withdraw_response = requests.post(
         url="https://api.kraken.com/0/private/Withdraw",
         data={
             "nonce": nonce_for_second_api_call,
@@ -60,3 +60,26 @@ def withdraw_crypto_from_kraken(
         },
         headers={"API-Key": public_key, "API-Sign": withdraw_api_sign},
     )
+    return withdraw_response
+
+
+def get_aws_ssm_securestring_parameter(paramname: str) -> str:
+    client = boto3.client("ssm")
+    securestring: str = client.get_parameter(Name=paramname, WithDecryption=True)[
+        "Parameter"
+    ]["Value"]
+    return securestring
+
+
+def lambda_handler(event, context):
+    wallet_key: str = get_aws_ssm_securestring_parameter("btc-hardwallet")
+    private_key: str = get_aws_ssm_securestring_parameter(
+        "kraken-private-withdraw-api-key"
+    )
+    public_key: str = get_aws_ssm_securestring_parameter(
+        "kraken-public-withdraw-api-key"
+    )
+
+    response = withdraw_crypto_from_kraken("XXBT", wallet_key, private_key, public_key)
+
+    return {"statusCode": 200, "body": response.json()}
