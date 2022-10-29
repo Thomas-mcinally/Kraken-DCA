@@ -18,7 +18,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda" {
 }
 
 resource "aws_cloudwatch_event_rule" "kraken_btc_withdraw_lambda_event_rule" {
-  name = "kraken_dca_lambda_event_rule"
+  name = "kraken_btc_withdraw_lambda_event_rule"
   description = "execute event 09:00 UTC on the first of the month"
   schedule_expression = "cron(0 9 1 * ? *)"
 }
