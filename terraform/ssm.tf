@@ -22,3 +22,19 @@ resource "aws_ssm_parameter" "kraken-private-api-key" {
     ignore_changes = [value]
   }
 }
+resource "aws_ssm_parameter" "kraken-public-withdraw-api-key" {
+  name  = "kraken-public-withdraw-api-key"
+  type  = "SecureString"
+  value = "SET MANUALLY IN AWS CONSOLE"
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
+resource "aws_ssm_parameter" "kraken-private-withdraw-api-key" {
+  name  = "kraken-private-withdraw-api-key"
+  type  = "SecureString"
+  value = "SET MANUALLY IN AWS CONSOLE"
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
