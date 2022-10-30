@@ -72,7 +72,7 @@ def get_aws_ssm_securestring_parameter(paramname: str) -> str:
 
 
 def lambda_handler(event: dict, context):
-    ticker = event["ticker"]
+    ticker: str = event["ticker"]
     wallet_key: str = get_aws_ssm_securestring_parameter(f"{ticker}-hardwallet")
     private_key: str = get_aws_ssm_securestring_parameter(
         "kraken-private-withdraw-api-key"
