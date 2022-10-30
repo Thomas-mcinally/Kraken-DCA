@@ -23,7 +23,7 @@ resource "aws_lambda_function" "btc-dca-lambda" {
 resource "aws_lambda_function" "kraken-withdraw-lambda" {
   function_name = "kraken-withdraw-lambda"
 
-  filename = "btc_withdraw_python_code.zip"
+  filename = "kraken_withdraw_python_code.zip"
 
   runtime = "python3.8"
   handler = "withdraw.lambda_handler"
