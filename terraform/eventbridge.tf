@@ -56,7 +56,7 @@ resource "aws_cloudwatch_event_target" "eth_withdraw_lambda_event_target" {
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch_eth_event_to_call_withdraw_lambda" {
-  statement_id  = "AllowExecutionFromCloudWatch"
+  statement_id  = "AllowExecutionFromCloudWatchForEthWithdrawal"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.btc-withdraw-lambda.function_name
   principal     = "events.amazonaws.com"
