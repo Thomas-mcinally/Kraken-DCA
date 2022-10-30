@@ -25,6 +25,11 @@ resource "aws_cloudwatch_event_rule" "kraken_btc_withdraw_lambda_event_rule" {
 resource "aws_cloudwatch_event_target" "btc_withdraw_lambda_event_target" {
   arn = aws_lambda_function.btc-withdraw-lambda.arn
   rule = aws_cloudwatch_event_rule.kraken_btc_withdraw_lambda_event_rule.name
+  input = <<EOF
+    {
+        "ticker": "XXBT"
+    }
+    EOF
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_withdraw_lambda" {

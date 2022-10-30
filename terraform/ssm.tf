@@ -22,8 +22,8 @@ resource "aws_ssm_parameter" "kraken-private-api-key" {
     ignore_changes = [value]
   }
 }
-resource "aws_ssm_parameter" "btc-hardwallet" {
-  name  = "btc-hardwallet"
+resource "aws_ssm_parameter" "XXBT-hardwallet" {
+  name  = "XXBT-hardwallet"
   type  = "SecureString"
   value = "SET MANUALLY IN AWS CONSOLE"
   lifecycle {
