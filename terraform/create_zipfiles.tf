@@ -8,13 +8,13 @@ data "archive_file" "dependencies_zip" {
 data "archive_file" "source_code_zip" {
   type = "zip"
 
-  source_file  = "./${path.module}/../btc_dca_script.py"
+  source_file = "./${path.module}/../btc_dca_script.py"
   output_path = "./${path.module}/python_code.zip"
 }
 
 data "archive_file" "withdraw_source_code_zip" {
   type = "zip"
 
-  source_file  = "./${path.module}/../withdraw.py"
+  source_file = "./${path.module}/../withdraw.py"
   output_path = "./${path.module}/btc_withdraw_python_code.zip"
 }

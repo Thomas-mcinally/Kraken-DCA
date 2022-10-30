@@ -30,6 +30,14 @@ resource "aws_ssm_parameter" "XXBT-hardwallet" {
     ignore_changes = [value]
   }
 }
+resource "aws_ssm_parameter" "XETH-hardwallet" {
+  name  = "XETH-hardwallet"
+  type  = "SecureString"
+  value = "SET MANUALLY IN AWS CONSOLE"
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
 resource "aws_ssm_parameter" "kraken-public-withdraw-api-key" {
   name  = "kraken-public-withdraw-api-key"
   type  = "SecureString"

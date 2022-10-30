@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "tmcinally-aws-remote-tfstate"
- 
+
   # Prevent accidental deletion of this S3 bucket
   lifecycle {
     prevent_destroy = true
@@ -27,9 +27,9 @@ resource "aws_dynamodb_table" "terraform_locks" {
 
 terraform {
   backend "s3" {
-    bucket         = "tmcinally-aws-remote-tfstate"
-    key            = "global/s3/terraform.tfstate"
-    region         = "eu-west-2"
+    bucket = "tmcinally-aws-remote-tfstate"
+    key    = "global/s3/terraform.tfstate"
+    region = "eu-west-2"
 
     dynamodb_table = "tmcinally-aws-remote-tfstate-locks"
     encrypt        = true
