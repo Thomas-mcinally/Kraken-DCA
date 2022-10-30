@@ -23,7 +23,7 @@ resource "aws_cloudwatch_event_rule" "kraken_btc_withdraw_lambda_event_rule" {
 }
 
 resource "aws_cloudwatch_event_target" "btc_withdraw_lambda_event_target" {
-  arn   = aws_lambda_function.btc-withdraw-lambda.arn
+  arn   = aws_lambda_function.kraken-withdraw-lambda.arn
   rule  = aws_cloudwatch_event_rule.kraken_btc_withdraw_lambda_event_rule.name
   input = <<EOF
     {
@@ -35,7 +35,7 @@ resource "aws_cloudwatch_event_target" "btc_withdraw_lambda_event_target" {
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_withdraw_lambda" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.btc-withdraw-lambda.function_name
+  function_name = aws_lambda_function.kraken-withdraw-lambda.function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.kraken_btc_withdraw_lambda_event_rule.arn
 }
@@ -46,7 +46,7 @@ resource "aws_cloudwatch_event_rule" "kraken_eth_withdraw_lambda_event_rule" {
 }
 
 resource "aws_cloudwatch_event_target" "eth_withdraw_lambda_event_target" {
-  arn   = aws_lambda_function.btc-withdraw-lambda.arn
+  arn   = aws_lambda_function.kraken-withdraw-lambda.arn
   rule  = aws_cloudwatch_event_rule.kraken_eth_withdraw_lambda_event_rule.name
   input = <<EOF
     {
@@ -58,7 +58,7 @@ resource "aws_cloudwatch_event_target" "eth_withdraw_lambda_event_target" {
 resource "aws_lambda_permission" "allow_cloudwatch_eth_event_to_call_withdraw_lambda" {
   statement_id  = "AllowExecutionFromCloudWatchForEthWithdrawal"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.btc-withdraw-lambda.function_name
+  function_name = aws_lambda_function.kraken-withdraw-lambda.function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.kraken_eth_withdraw_lambda_event_rule.arn
 }

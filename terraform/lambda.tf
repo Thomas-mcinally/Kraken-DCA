@@ -20,8 +20,8 @@ resource "aws_lambda_function" "btc-dca-lambda" {
   role = aws_iam_role.iam-for-lambda.arn
 }
 
-resource "aws_lambda_function" "btc-withdraw-lambda" {
-  function_name = "btc-withdraw-lambda"
+resource "aws_lambda_function" "kraken-withdraw-lambda" {
+  function_name = "kraken-withdraw-lambda"
 
   filename = "btc_withdraw_python_code.zip"
 
