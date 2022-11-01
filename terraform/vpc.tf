@@ -1,5 +1,8 @@
 resource "aws_vpc" "vpc" {
   cidr_block = "10.100.0.0/16"
+  tags = {
+    Name = "Kraken DCA VPC"
+  }
 }
 
 resource "aws_subnet" "private_subnet" {
@@ -48,14 +51,14 @@ resource "aws_nat_gateway" "nat" {
 resource "aws_route_table" "private_subnet_route_table" {
   vpc_id = aws_vpc.vpc.id
   tags = {
-    Name        = "Kraken-DCA-private-subnet-route-table"
+    Name = "Kraken-DCA-private-subnet-route-table"
   }
 }
 /* Routing table for public subnet */
 resource "aws_route_table" "public_subnet_route_table" {
   vpc_id = aws_vpc.vpc.id
   tags = {
-    Name        = "Kraken-DCA-public-subnet-route-table"
+    Name = "Kraken-DCA-public-subnet-route-table"
   }
 }
 resource "aws_route" "public_internet_gateway" {
