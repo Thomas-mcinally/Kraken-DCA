@@ -34,7 +34,7 @@ resource "aws_eip" "nat_eip" {
   vpc        = true
   depends_on = [aws_internet_gateway.ig]
 }
-/* NAT for private subnet*/
+/* NAT gateway*/
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat_eip.id
   subnet_id     = aws_subnet.public_subnet.id
@@ -42,4 +42,29 @@ resource "aws_nat_gateway" "nat" {
   tags = {
     Name = "Kraken DCA NAT"
   }
+}
+
+/* Routing table for private subnet */
+resource "aws_route_table" "private_subnet_route_table" {
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Name        = "Kraken-DCA-private-subnet-route-table"
+  }
+}
+/* Routing table for public subnet */
+resource "aws_route_table" "public_subnet_route_table" {
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Name        = "Kraken-DCA-public-subnet-route-table"
+  }
+}
+resource "aws_route" "public_internet_gateway" {
+  route_table_id         = aws_route_table.public_subnet_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.ig.id
+}
+resource "aws_route" "private_nat_gateway" {
+  route_table_id         = aws_route_table.private_subnet_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.nat.id
 }
