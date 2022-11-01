@@ -21,10 +21,25 @@ resource "aws_subnet" "public_subnet" {
     Name = "Kraken DCA public Subnet"
   }
 }
-
+/* Internet gateway for public subnet */
 resource "aws_internet_gateway" "ig" {
   vpc_id = aws_vpc.vpc.id
   tags = {
     Name = "Kraken DCA internet gateway"
+  }
+}
+
+/* Elastic IP for NAT */
+resource "aws_eip" "nat_eip" {
+  vpc        = true
+  depends_on = [aws_internet_gateway.ig]
+}
+/* NAT for private subnet*/
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = aws_subnet.public_subnet.id
+  depends_on    = [aws_internet_gateway.ig]
+  tags = {
+    Name = "Kraken DCA NAT"
   }
 }
