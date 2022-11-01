@@ -21,3 +21,10 @@ resource "aws_subnet" "public_subnet" {
     Name = "Kraken DCA public Subnet"
   }
 }
+
+resource "aws_internet_gateway" "ig" {
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Name = "Kraken DCA internet gateway"
+  }
+}
