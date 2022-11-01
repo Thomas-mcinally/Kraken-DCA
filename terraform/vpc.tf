@@ -80,3 +80,24 @@ resource "aws_route_table_association" "private_route_table_association" {
   subnet_id      = aws_subnet.private_subnet.id
   route_table_id = aws_route_table.private_subnet_route_table.id
 }
+resource "aws_default_security_group" "default_security_group" {
+  vpc_id = aws_vpc.vpc.id
+
+  ingress {
+    protocol  = -1
+    self      = true
+    from_port = 0
+    to_port   = 0
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "Kraken-DCA-default-security-group"
+  }
+}
