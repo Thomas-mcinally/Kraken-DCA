@@ -27,3 +27,8 @@ resource "aws_iam_role_policy_attachment" "kraken_dca_lambda_access_to_ssm" {
   role       = aws_iam_role.iam-for-lambda.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
 }
+
+resource "aws_iam_role_policy_attachment" "iam_role_policy_attachment_lambda_vpc_access_execution" {
+  role       = aws_iam_role.iam-for-lambda.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+}
