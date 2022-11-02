@@ -63,7 +63,7 @@ def withdraw_crypto_from_kraken(
     return withdraw_response
 
 
-def generate_nonce():
+def generate_nonce() -> int:
     return int(time.time() * 1000)
 
 
