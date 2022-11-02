@@ -91,4 +91,4 @@ def lambda_handler(event: dict, context) -> dict:
         ticker, wallet_key, private_key, public_key
     )
 
-    return {"statusCode": 200, "body": response.json()}
+    return {"statusCode": response.status_code, "body": response.json()}
