@@ -32,7 +32,7 @@ def withdraw_crypto_from_kraken(
     balance_api_sign = get_api_sign(
         api_path="/0/private/Balance",
         urlencoded_body=url_encoded_balance_body,
-        nonce=str(nonce_for_first_api_call),
+        nonce=nonce_for_first_api_call,
         private_key=private_key,
     )
     balance_response = requests.post(
@@ -47,7 +47,7 @@ def withdraw_crypto_from_kraken(
     withdraw_api_sign = get_api_sign(
         api_path="/0/private/Withdraw",
         urlencoded_body=url_encoded_withdraw_body,
-        nonce=str(nonce_for_second_api_call),
+        nonce=nonce_for_second_api_call,
         private_key=private_key,
     )
     withdraw_response = requests.post(
