@@ -28,7 +28,7 @@ def withdraw_crypto_from_kraken(
     withdrawal_address_key: str,
     private_key: str,
     public_key: str,
-):
+) -> requests.Response:
     nonce_for_first_api_call: str = generate_nonce()
     url_encoded_balance_body: str = f"nonce={nonce_for_first_api_call}"
     balance_api_sign = get_api_sign(
@@ -87,6 +87,8 @@ def lambda_handler(event: dict, context):
         "kraken-public-withdraw-api-key"
     )
 
-    response = withdraw_crypto_from_kraken(ticker, wallet_key, private_key, public_key)
+    response: requests.Response = withdraw_crypto_from_kraken(
+        ticker, wallet_key, private_key, public_key
+    )
 
     return {"statusCode": 200, "body": response.json()}
