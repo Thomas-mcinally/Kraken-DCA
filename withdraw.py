@@ -6,7 +6,9 @@ import requests
 import boto3
 
 
-def get_api_sign(api_path, urlencoded_body, nonce, private_key):
+def get_api_sign(
+    api_path: str, urlencoded_body: str, nonce: str, private_key: str
+) -> str:
 
     api_sha256: hashlib._Hash = hashlib.sha256(
         nonce.encode() + urlencoded_body.encode()
