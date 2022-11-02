@@ -29,7 +29,7 @@ def withdraw_crypto_from_kraken(
     private_key: str,
     public_key: str,
 ) -> requests.Response:
-    nonce_for_first_api_call: str = generate_nonce()
+    nonce_for_first_api_call: str = get_nonce()
     url_encoded_balance_body: str = f"nonce={nonce_for_first_api_call}"
     balance_api_sign: str = get_api_sign(
         api_path="/0/private/Balance",
@@ -44,7 +44,7 @@ def withdraw_crypto_from_kraken(
     )
     current_balance = balance_response.json()["result"][asset_to_withdraw]
 
-    nonce_for_second_api_call: str = generate_nonce()
+    nonce_for_second_api_call: str = get_nonce()
     url_encoded_withdraw_body: str = f"nonce={nonce_for_second_api_call}&asset={asset_to_withdraw}&key={withdrawal_address_key}&amount={current_balance}"
     withdraw_api_sign: str = get_api_sign(
         api_path="/0/private/Withdraw",
@@ -65,7 +65,7 @@ def withdraw_crypto_from_kraken(
     return withdraw_response
 
 
-def generate_nonce() -> str:
+def get_nonce() -> str:
     return str(int(time.time() * 1000))
 
 
