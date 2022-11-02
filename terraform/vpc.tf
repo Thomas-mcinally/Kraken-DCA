@@ -4,7 +4,7 @@ resource "aws_vpc" "vpc" {
     Name = "Kraken DCA VPC"
   }
 }
-
+/* Public and private subnets */
 resource "aws_subnet" "private_subnet" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = "10.100.0.0/24"
@@ -80,6 +80,7 @@ resource "aws_route_table_association" "private_route_table_association" {
   subnet_id      = aws_subnet.private_subnet.id
   route_table_id = aws_route_table.private_subnet_route_table.id
 }
+/* Security Group */
 resource "aws_default_security_group" "default_security_group" {
   vpc_id = aws_vpc.vpc.id
 
