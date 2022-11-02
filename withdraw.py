@@ -31,13 +31,13 @@ def withdraw_crypto_from_kraken(
 ) -> requests.Response:
     nonce_for_first_api_call: str = generate_nonce()
     url_encoded_balance_body: str = f"nonce={nonce_for_first_api_call}"
-    balance_api_sign = get_api_sign(
+    balance_api_sign: str = get_api_sign(
         api_path="/0/private/Balance",
         urlencoded_body=url_encoded_balance_body,
         nonce=nonce_for_first_api_call,
         private_key=private_key,
     )
-    balance_response = requests.post(
+    balance_response: requests.Response = requests.post(
         url="https://api.kraken.com/0/private/Balance",
         data={"nonce": nonce_for_first_api_call},
         headers={"API-Key": public_key, "API-Sign": balance_api_sign},
@@ -46,13 +46,13 @@ def withdraw_crypto_from_kraken(
 
     nonce_for_second_api_call: str = generate_nonce()
     url_encoded_withdraw_body: str = f"nonce={nonce_for_second_api_call}&asset={asset_to_withdraw}&key={withdrawal_address_key}&amount={current_balance}"
-    withdraw_api_sign = get_api_sign(
+    withdraw_api_sign: str = get_api_sign(
         api_path="/0/private/Withdraw",
         urlencoded_body=url_encoded_withdraw_body,
         nonce=nonce_for_second_api_call,
         private_key=private_key,
     )
-    withdraw_response = requests.post(
+    withdraw_response: requests.Response = requests.post(
         url="https://api.kraken.com/0/private/Withdraw",
         data={
             "nonce": nonce_for_second_api_call,
@@ -77,7 +77,7 @@ def get_aws_ssm_securestring_parameter(paramname: str) -> str:
     return securestring
 
 
-def lambda_handler(event: dict, context):
+def lambda_handler(event: dict, context) -> dict:
     ticker: str = event["ticker"]
     wallet_key: str = get_aws_ssm_securestring_parameter(f"{ticker}-hardwallet")
     private_key: str = get_aws_ssm_securestring_parameter(
