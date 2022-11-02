@@ -40,9 +40,9 @@ def get_nonce() -> str:
     return str(int(time.time() * 1000))
 
 
-def round_down(n: float, decimals: int) -> float:
-    multiplier: int = 10**decimals
-    return math.floor(n * multiplier) / multiplier
+def round_down_decimal_number(number: float, desired_result_decimals: int) -> float:
+    multiplier: int = 10**desired_result_decimals
+    return math.floor(number * multiplier) / multiplier
 
 
 def get_api_sign(
@@ -67,7 +67,9 @@ def get_bid_price(trading_pair: str) -> str:
         url=f"https://api.kraken.com/0/public/Ticker?pair={trading_pair}"
     ).json()
     top_market_bid: float = float(market_data["result"][trading_pair]["b"][0])
-    my_bid_price: str = str(round_down(top_market_bid, decimals=6))
+    my_bid_price: str = str(
+        round_down_decimal_number(top_market_bid, desired_result_decimals=6)
+    )
     return my_bid_price
 
 
