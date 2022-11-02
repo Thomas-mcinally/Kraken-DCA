@@ -21,7 +21,7 @@ def place_limit_order_on_kraken(
         private_key=private_key,
     )
 
-    response = requests.post(
+    response: requests.Response = requests.post(
         url="https://api.kraken.com/0/private/AddOrder",
         data={
             "nonce": nonce,
@@ -41,7 +41,9 @@ def round_down(n: float, decimals: int) -> float:
     return math.floor(n * multiplier) / multiplier
 
 
-def get_api_sign(api_path, urlencoded_body, nonce, private_key):
+def get_api_sign(
+    api_path: str, urlencoded_body: str, nonce: str, private_key: str
+) -> str:
 
     api_sha256: hashlib._Hash = hashlib.sha256(
         nonce.encode() + urlencoded_body.encode()
@@ -77,14 +79,14 @@ def get_aws_ssm_securestring_parameter(paramname: str) -> str:
     return securestring
 
 
-def lambda_handler(event, context):
+def lambda_handler(event, context) -> dict:
     budget: float = float(
         get_aws_ssm_securestring_parameter("kraken-dca-BTC-daily-purchase-amount")
     )
     private_key: str = get_aws_ssm_securestring_parameter("kraken-private-api-key")
     public_key: str = get_aws_ssm_securestring_parameter("kraken-public-api-key")
 
-    response = place_limit_order_on_kraken(
+    response: requests.Response = place_limit_order_on_kraken(
         trading_pair="XXBTZEUR",
         budget=budget,
         private_key=private_key,
