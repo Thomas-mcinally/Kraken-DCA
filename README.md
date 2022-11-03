@@ -7,11 +7,6 @@
 - Use `GET https://api.kraken.com/0/public/Ticker?pair={trading_pair}` to get current market price of asset
 - Use `POST https://api.kraken.com/0/private/AddOrder` to create limit order
   - Use limit orders because they have lower fees than market orders
-- AWS architecture: 
-  - AWS Lambda holds python script
-  - AWS Eventbridge used to schedule Lambda function execution
-  - AWS SSM used to store API keys and purchase amount, accessed from Lambda function
-  - AWS S3 bucket used to store Terraform remote state (enables CI/CD pipeline)
 
 
 - All AWS infrastructure set up using Terraform 
@@ -22,3 +17,12 @@
 - Every month automatically withdraw
 - Use `POST https://api.kraken.com/0/private/Balance` to see what current balance it
 - Use `POST https://api.kraken.com/0/private/Withdraw` to withdraw the total balance
+
+## AWS Infrastructure
+- AWS Lambda holds python script
+- AWS Eventbridge used to schedule Lambda function execution
+- AWS SSM used to store API keys and purchase amount, accessed from Lambda function
+- AWS S3 bucket used to store Terraform remote state (enables CI/CD pipeline)
+
+
+![](images/aws_infrastructure.PNG)
