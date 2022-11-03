@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_event_rule" "kraken_dca_lambda_event_rule" {
   name                = "kraken_dca_lambda_event_rule"
-  description         = "execute event every day at 10:00 UTC"
+  description         = "Buy BTC every day at 10:00 UTC"
   schedule_expression = "cron(0 10 * * ? *)"
 }
 
@@ -24,7 +24,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda" {
 }
 resource "aws_cloudwatch_event_rule" "kraken_btc_withdraw_lambda_event_rule" {
   name                = "kraken_btc_withdraw_lambda_event_rule"
-  description         = "execute event 09:00 UTC on the first of the month"
+  description         = "Withdraw BTC 09:00 UTC on the first of the month"
   schedule_expression = "cron(0 9 1 * ? *)"
 }
 
@@ -47,7 +47,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_withdraw_lambda" {
 }
 resource "aws_cloudwatch_event_rule" "kraken_eth_withdraw_lambda_event_rule" {
   name                = "kraken_eth_withdraw_lambda_event_rule"
-  description         = "execute event 09:15 UTC on the first of the month"
+  description         = "Withdraw ETH 09:15 UTC on the first of the month"
   schedule_expression = "cron(15 9 1 * ? *)"
 }
 
