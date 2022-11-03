@@ -25,4 +25,4 @@
 - AWS S3 bucket used to store Terraform remote state (enables CI/CD pipeline)
 
 
-![](images/aws_infrastructure.PNG)
+![](images/aws_infrastructure.JPG)
