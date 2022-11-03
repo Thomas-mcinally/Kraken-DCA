@@ -11,7 +11,7 @@ resource "aws_lambda_function" "btc-dca-lambda" {
   filename = "python_code.zip"
 
   runtime = "python3.8"
-  handler = "btc_dca_script.lambda_handler"
+  handler = "dca.lambda_handler"
 
   layers = [aws_lambda_layer_version.kraken_dca_dependencies.arn]
 

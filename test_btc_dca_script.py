@@ -1,4 +1,4 @@
-from btc_dca_script import place_limit_order_on_kraken
+from dca import place_limit_order_on_kraken
 import pytest
 import responses
 from responses import matchers
