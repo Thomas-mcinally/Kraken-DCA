@@ -5,8 +5,8 @@ resource "aws_lambda_layer_version" "kraken_dca_dependencies" {
   source_code_hash = data.archive_file.dependencies_zip.output_base64sha256
 }
 
-resource "aws_lambda_function" "btc-dca-lambda" {
-  function_name = "btc-dca-lambda"
+resource "aws_lambda_function" "kraken-dca-lambda" {
+  function_name = "kraken-dca-lambda"
 
   filename = "python_code.zip"
 
