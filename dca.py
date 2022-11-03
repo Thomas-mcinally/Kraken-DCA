@@ -86,8 +86,11 @@ def get_aws_ssm_securestring_parameter(paramname: str) -> str:
 
 
 def lambda_handler(event: dict, context) -> dict:
+    crypto_to_buy: str = event["crypto_to_buy"]
     budget: float = float(
-        get_aws_ssm_securestring_parameter("kraken-dca-BTC-daily-purchase-amount")
+        get_aws_ssm_securestring_parameter(
+            f"kraken-dca-{crypto_to_buy}-daily-purchase-amount"
+        )
     )
     private_key: str = get_aws_ssm_securestring_parameter("kraken-private-api-key")
     public_key: str = get_aws_ssm_securestring_parameter("kraken-public-api-key")
