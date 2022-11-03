@@ -5,8 +5,13 @@ resource "aws_cloudwatch_event_rule" "kraken_dca_lambda_event_rule" {
 }
 
 resource "aws_cloudwatch_event_target" "kraken_dca_lambda_event_target" {
-  arn  = aws_lambda_function.btc-dca-lambda.arn
-  rule = aws_cloudwatch_event_rule.kraken_dca_lambda_event_rule.name
+  arn   = aws_lambda_function.btc-dca-lambda.arn
+  rule  = aws_cloudwatch_event_rule.kraken_dca_lambda_event_rule.name
+  input = <<EOF
+    {
+        "trading_pair": "XXBTZEUR"
+    }
+    EOF
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda" {
