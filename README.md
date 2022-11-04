@@ -3,7 +3,6 @@
   - Works for any cryptocurrency available on Kraken, and any desired purchase interval
 - 90% reduction in trading fees as compared to using the built-in recurring purchase feature in the Kraken mobile app
 
-- The withdraw script enables recurring withdrawals
 ## Recurring purchasing script `dca.py`
 - Use `GET https://api.kraken.com/0/public/Ticker?pair={trading_pair}` to get current market price of asset
 - Use `POST https://api.kraken.com/0/private/AddOrder` to create limit order
