@@ -1,5 +1,5 @@
 # Kraken-DCA
-- Serverless application that automates recurring purchases of crypto on Kraken Exchange
+- Serverless application that automates recurring purchases & withdrawal of crypto on Kraken Exchange
   - Works for any cryptocurrency available on Kraken, and any desired purchase interval
 - 90% reduction in trading fees as compared to using the built-in recurring purchase feature in the Kraken mobile app
 
