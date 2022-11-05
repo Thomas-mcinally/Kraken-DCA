@@ -20,4 +20,4 @@
 - Nat gateway has constant IP address (enables IP whitelisting for API keys)
 
 
-![](images/aws_infrastructure.jpg)
+![](diagrams/aws_infrastructure.jpg)
