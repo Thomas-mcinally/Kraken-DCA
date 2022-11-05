@@ -101,7 +101,7 @@ def test_calls_to_kraken_endpoints_are_made_with_values_calculated_from_inputs(
         ),
     ],
 )
-def test_call_to_private_kraken_endpoint_is_made_with_required_headers_and_nonce_is_included_in_body(
+def test_call_to_private_kraken_endpoint_is_made_with_required_headers_and_nonce_included_in_body(
     mocked_responses,
     mocker,
     trading_pair,
