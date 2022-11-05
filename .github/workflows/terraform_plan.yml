@@ -1,0 +1,40 @@
+---
+name: Terraform plan
+on:
+  pull_request:
+
+jobs:
+  tf_plan:
+    name: Terraform plan
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout Repo
+      uses: actions/checkout@v1
+
+    - name: Install pipenv
+      shell: bash
+      run: pipx install pipenv
+
+    - run: pipenv requirements --exclude-markers > requirements.txt
+    - run: mkdir dependencies
+    - run: mkdir dependencies/python
+    - run: docker run --rm --volume=$(pwd):/lambda-build -w=/lambda-build lambci/lambda:build-python3.8 pip install -r requirements.txt --target dependencies/python
+
+    - name: configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-region: eu-west-2
+
+    - name: setup terraform
+      uses: hashicorp/setup-terraform@v2
+    
+    - name: Terraform Init
+      id: init
+      run: cd terraform && terraform init
+
+    - name: Terraform plan
+      id: plan
+      run: cd terraform && terraform plan
