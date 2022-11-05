@@ -17,7 +17,7 @@ def mocked_responses():
         (222.222, "222222", "ETH", "eth_hardwallet", "55.55"),
     ],
 )
-def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made(
+def test_that_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_values_calculated_from_inputs(
     mocked_responses,
     mocker,
     current_time,
@@ -62,7 +62,7 @@ def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made(
         (3.333, "3333", 4.444, "4444"),
     ],
 )
-def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_different_nonces(
+def test_that_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_different_nonces(
     mocked_responses,
     mocker,
     time_of_first_api_call,
@@ -134,7 +134,7 @@ def test_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_different_
         ),
     ],
 )
-def test_call_to_balances_endpoint_is_made_with_required_auth_headers(
+def test_that_call_to_balances_endpoint_is_made_with_required_auth_headers(
     mocked_responses, mocker, current_time, private_key, public_key, expected_api_Sign
 ):
     mocked_responses.post(
@@ -182,7 +182,7 @@ def test_call_to_balances_endpoint_is_made_with_required_auth_headers(
         ),
     ],
 )
-def test_call_to_withdraw_endpoint_is_made_with_required_auth_headers(
+def test_that_call_to_withdraw_endpoint_is_made_with_required_auth_headers(
     mocker,
     mocked_responses,
     public_key,
