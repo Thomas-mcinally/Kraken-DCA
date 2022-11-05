@@ -23,6 +23,18 @@ def get_api_sign(
     return api_signature_decoded
 
 
+def get_nonce() -> str:
+    return str(int(time.time() * 1000))
+
+
+def get_aws_ssm_securestring_parameter(paramname: str) -> str:
+    client = boto3.client("ssm")
+    securestring: str = client.get_parameter(Name=paramname, WithDecryption=True)[
+        "Parameter"
+    ]["Value"]
+    return securestring
+
+
 def withdraw_crypto_from_kraken(
     asset_to_withdraw: str,
     withdrawal_address_key: str,
@@ -63,18 +75,6 @@ def withdraw_crypto_from_kraken(
         headers={"API-Key": public_key, "API-Sign": withdraw_api_sign},
     )
     return withdraw_response
-
-
-def get_nonce() -> str:
-    return str(int(time.time() * 1000))
-
-
-def get_aws_ssm_securestring_parameter(paramname: str) -> str:
-    client = boto3.client("ssm")
-    securestring: str = client.get_parameter(Name=paramname, WithDecryption=True)[
-        "Parameter"
-    ]["Value"]
-    return securestring
 
 
 def lambda_handler(event: dict, context) -> dict:

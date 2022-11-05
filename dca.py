@@ -7,35 +7,6 @@ import requests
 import boto3
 
 
-def place_limit_order_on_kraken(
-    trading_pair: str, budget: float, private_key: str, public_key: str
-) -> requests.Response:
-    bid_price: str = get_bid_price(trading_pair)
-    volume: str = get_trade_volume(budget, bid_price)
-    nonce: str = get_nonce()
-    url_encoded_body: str = f"nonce={nonce}&ordertype=limit&pair={trading_pair}&price={bid_price}&type=buy&volume={volume}"
-    api_sign: str = get_api_sign(
-        api_path="/0/private/AddOrder",
-        urlencoded_body=url_encoded_body,
-        nonce=nonce,
-        private_key=private_key,
-    )
-
-    response: requests.Response = requests.post(
-        url="https://api.kraken.com/0/private/AddOrder",
-        data={
-            "nonce": nonce,
-            "ordertype": "limit",
-            "pair": trading_pair,
-            "price": bid_price,
-            "type": "buy",
-            "volume": volume,
-        },
-        headers={"API-Key": public_key, "API-Sign": api_sign},
-    )
-    return response
-
-
 def get_nonce() -> str:
     return str(int(time.time() * 1000))
 
@@ -83,6 +54,35 @@ def get_aws_ssm_securestring_parameter(paramname: str) -> str:
         "Parameter"
     ]["Value"]
     return securestring
+
+
+def place_limit_order_on_kraken(
+    trading_pair: str, budget: float, private_key: str, public_key: str
+) -> requests.Response:
+    bid_price: str = get_bid_price(trading_pair)
+    volume: str = get_trade_volume(budget, bid_price)
+    nonce: str = get_nonce()
+    url_encoded_body: str = f"nonce={nonce}&ordertype=limit&pair={trading_pair}&price={bid_price}&type=buy&volume={volume}"
+    api_sign: str = get_api_sign(
+        api_path="/0/private/AddOrder",
+        urlencoded_body=url_encoded_body,
+        nonce=nonce,
+        private_key=private_key,
+    )
+
+    response: requests.Response = requests.post(
+        url="https://api.kraken.com/0/private/AddOrder",
+        data={
+            "nonce": nonce,
+            "ordertype": "limit",
+            "pair": trading_pair,
+            "price": bid_price,
+            "type": "buy",
+            "volume": volume,
+        },
+        headers={"API-Key": public_key, "API-Sign": api_sign},
+    )
+    return response
 
 
 def lambda_handler(event: dict, context) -> dict:
