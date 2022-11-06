@@ -28,13 +28,8 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-region: eu-west-2
 
-    - name: setup terraform
-      uses: hashicorp/setup-terraform@v2
-    
-    - name: Terraform Init
-      id: init
-      run: cd terraform && terraform init
-
-    - name: Terraform plan
-      id: plan
-      run: cd terraform && terraform plan
+    - uses: dflook/terraform-plan@50b375f84b6c68c386d78ca53b2af6067eea3d7c # v1.29.1
+      with:
+        path: terraform
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
