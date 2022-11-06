@@ -20,4 +20,6 @@
 - NAT Gateway has constant IP address (enables IP whitelisting for API keys)
 
 
+
 ![](diagrams/aws_infrastructure.jpg)
+
