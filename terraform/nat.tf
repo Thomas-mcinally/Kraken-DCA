@@ -8,11 +8,3 @@ resource "aws_instance" "ec2_nat_instance" {
   instance_type = "t3.micro"
   subnet_id     = aws_subnet.public_subnet.id
 }
-resource "aws_network_interface" "nat_ec2_network_interface" {
-  subnet_id = aws_subnet.public_subnet.id
-
-  attachment {
-    instance     = aws_instance.ec2_nat_instance.id
-    device_index = 1
-  }
-}
