@@ -19,6 +19,8 @@ resource "aws_lambda_function" "kraken-dca-lambda" {
 
   role = aws_iam_role.iam-for-lambda.arn
 
+  timeout = 6
+
   vpc_config {
     subnet_ids         = [aws_subnet.private_subnet.id]
     security_group_ids = [aws_default_security_group.default_security_group.id]
@@ -38,6 +40,8 @@ resource "aws_lambda_function" "kraken-withdraw-lambda" {
   source_code_hash = data.archive_file.withdraw_source_code_zip.output_base64sha256
 
   role = aws_iam_role.iam-for-lambda.arn
+
+  timeout = 6
 
   vpc_config {
     subnet_ids         = [aws_subnet.private_subnet.id]
