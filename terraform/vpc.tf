@@ -54,7 +54,7 @@ resource "aws_route" "public_internet_gateway" {
 resource "aws_route" "private_nat_instance" {
   route_table_id         = aws_route_table.private_subnet_route_table.id
   destination_cidr_block = "0.0.0.0/0"
-  instance_id = aws_instance.ec2_nat_instance.id
+  network_interface_id   = aws_network_interface.nat_ec2_network_interface.id
 }
 /* Route table associations */
 resource "aws_route_table_association" "public_route_table_association" {
