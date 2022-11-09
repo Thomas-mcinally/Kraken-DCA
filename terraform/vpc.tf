@@ -65,18 +65,20 @@ resource "aws_route_table_association" "private_route_table_association" {
   subnet_id      = aws_subnet.private_subnet.id
   route_table_id = aws_route_table.private_subnet_route_table.id
 }
-/* Security Group */
-resource "aws_default_security_group" "default_security_group" {
+/* Default security group */
+resource "aws_default_security_group" "default_security_group_for_vpc" {
   vpc_id = aws_vpc.vpc.id
 
   ingress {
-    protocol  = -1
-    self      = true
-    from_port = 0
-    to_port   = 0
+    description = "Allow only inbound traffic that is a response to a request made previously"
+    protocol    = -1
+    self        = true
+    from_port   = 0
+    to_port     = 0
   }
 
   egress {
+    description = "Allow all outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
