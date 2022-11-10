@@ -5,7 +5,7 @@ resource "aws_eip" "nat_eip" {
 }
 resource "aws_instance" "ec2_nat_instance" {
   ami           = "ami-0bbb886f29931c526"
-  instance_type = "t3.nano"
+  instance_type = "t3.micro"
   network_interface {
     network_interface_id = aws_network_interface.nat_ec2_network_interface.id
     device_index         = 0
