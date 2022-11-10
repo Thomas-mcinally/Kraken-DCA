@@ -17,7 +17,8 @@
 - AWS Eventbridge used to schedule Lambda function execution
 - AWS SSM used to store API keys and purchase budget, accessed from Lambda function
 - AWS S3 bucket used to store Terraform remote state (enables CI/CD pipeline)
-- NAT Gateway has constant IP address (enables IP whitelisting for API keys)
+- NAT instance has constant IP address (enables IP whitelisting for API keys)
+- Use NAT instance instead of NAT gateway because it is much cheaper and within AWS free tier
 
 
 
