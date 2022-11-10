@@ -21,5 +21,5 @@
 
 
 
-![](diagrams/aws_infrastructure.jpg)
+![](diagrams/aws_infra.png)
 
