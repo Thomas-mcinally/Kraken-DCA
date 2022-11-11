@@ -90,5 +90,4 @@ def lambda_handler(event: dict, context) -> dict:
     response: requests.Response = withdraw_crypto_from_kraken(
         ticker, wallet_key, private_key, public_key
     )
-
-    return {"statusCode": response.status_code, "body": response.json()}
+    print(f"status_code: {response.status_code} body: {response.json()}")

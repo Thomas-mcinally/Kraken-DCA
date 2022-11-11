@@ -102,4 +102,4 @@ def lambda_handler(event: dict, context) -> dict:
         public_key=public_key,
     )
 
-    print(f"response: {response.json()}")
+    print(f"status_code: {response.status_code} body: {response.json()}")
