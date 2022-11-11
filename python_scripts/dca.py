@@ -105,5 +105,6 @@ def lambda_handler(event: dict, context) -> dict:
     logger = logging.getLogger()
 
     logger.info(f"response: {response.json()}")
+    print(f"print response: {response.json()}")
 
     return {"statusCode": response.status_code, "body": response.json()}
