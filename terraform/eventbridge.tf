@@ -1,7 +1,7 @@
 resource "aws_cloudwatch_event_rule" "kraken_dca_lambda_event_rule" {
   name                = "kraken_dca_lambda_event_rule"
   description         = "Buy BTC every day at 10:00 UTC"
-  schedule_expression = "cron(0 10 * * ? *)"
+  schedule_expression = "cron(5 22 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "kraken_dca_lambda_event_target" {
