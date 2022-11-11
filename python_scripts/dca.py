@@ -1,6 +1,7 @@
 import base64
 import hashlib
 import hmac
+import logging
 import math
 import time
 import requests
@@ -101,5 +102,8 @@ def lambda_handler(event: dict, context) -> dict:
         private_key=private_key,
         public_key=public_key,
     )
+    logger = logging.getLogger()
+
+    logger.info(f"response: {response.json()}")
 
     return {"statusCode": response.status_code, "body": response.json()}
