@@ -22,7 +22,7 @@ resource "aws_lambda_function" "kraken-dca-lambda" {
   timeout = 10
 
   vpc_config {
-    subnet_ids         = [aws_subnet.private_subnet.id]
+    subnet_ids         = [aws_subnet.public_subnet.id]
     security_group_ids = [aws_default_security_group.default_security_group_for_vpc.id]
   }
 }
@@ -44,7 +44,7 @@ resource "aws_lambda_function" "kraken-withdraw-lambda" {
   timeout = 10
 
   vpc_config {
-    subnet_ids         = [aws_subnet.private_subnet.id]
+    subnet_ids         = [aws_subnet.public_subnet.id]
     security_group_ids = [aws_default_security_group.default_security_group_for_vpc.id]
   }
 }
