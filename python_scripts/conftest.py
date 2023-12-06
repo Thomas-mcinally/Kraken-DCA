@@ -9,8 +9,8 @@ import responses
 class ResponsesCall:
     request_method: str
     request_url: str
-    request_json: Union[dict, None] = None
     request_headers: dict
+    request_json: Union[dict, None] = None
 
 
 @pytest.fixture
