@@ -1,5 +1,4 @@
 import pytest
-from responses import matchers
 from withdraw import withdraw_crypto_from_kraken
 
 
@@ -22,7 +21,6 @@ def test_that_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_value
 ):
     mocked_responses.post(
         url="https://api.kraken.com/0/private/Balance",
-        match=[matchers.urlencoded_params_matcher({"nonce": expected_nonce})],
         json={"result": {asset_to_withdraw: current_balance}, "error": []},
     )
 
@@ -34,12 +32,20 @@ def test_that_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_value
         private_key="kQH5HW/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==",
         public_key="fake123",
     )
-    calls = get_calls_to_responses("POST", "https://api.kraken.com/0/private/Withdraw")
-    assert len(calls) == 1
-    assert calls[0].request_urlencoded_body["nonce"] == [expected_nonce]
-    assert calls[0].request_urlencoded_body["asset"] == [asset_to_withdraw]
-    assert calls[0].request_urlencoded_body["key"] == [withdrawal_address_key]
-    assert calls[0].request_urlencoded_body["amount"] == [current_balance]
+
+    balance_calls = get_calls_to_responses(
+        "POST", "https://api.kraken.com/0/private/Balance"
+    )
+    assert len(balance_calls) == 1
+    assert balance_calls[0].request_urlencoded_body["nonce"] == [expected_nonce]
+    withdraw_calls = get_calls_to_responses(
+        "POST", "https://api.kraken.com/0/private/Withdraw"
+    )
+    assert len(withdraw_calls) == 1
+    assert withdraw_calls[0].request_urlencoded_body["nonce"] == [expected_nonce]
+    assert withdraw_calls[0].request_urlencoded_body["asset"] == [asset_to_withdraw]
+    assert withdraw_calls[0].request_urlencoded_body["key"] == [withdrawal_address_key]
+    assert withdraw_calls[0].request_urlencoded_body["amount"] == [current_balance]
 
 
 @pytest.mark.parametrize(
