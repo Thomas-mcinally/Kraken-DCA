@@ -1,13 +1,6 @@
 import pytest
-import responses
 from responses import matchers
 from withdraw import withdraw_crypto_from_kraken
-
-
-@pytest.fixture
-def mocked_responses():
-    with responses.RequestsMock(assert_all_requests_are_fired=False) as rsps:
-        yield rsps
 
 
 @pytest.mark.parametrize(
