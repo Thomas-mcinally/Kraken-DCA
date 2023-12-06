@@ -1,6 +1,12 @@
 from dca import place_limit_order_on_kraken
 import pytest
-from responses import matchers
+
+
+@pytest.fixture(autouse=True)
+def setup_default_handlers(mocked_responses):
+    mocked_responses.post(
+        url="https://api.kraken.com/0/private/AddOrder",
+    )
 
 
 @pytest.mark.parametrize(
@@ -36,6 +42,7 @@ def test_that_calls_to_kraken_endpoints_are_made_with_values_calculated_from_inp
     expected_nonce,
     expected_bid_price,
     expected_trade_volume,
+    get_calls_to_responses,
 ):
     mocked_responses.get(
         url=f"https://api.kraken.com/0/public/Ticker?pair={trading_pair}",
@@ -47,21 +54,6 @@ def test_that_calls_to_kraken_endpoints_are_made_with_values_calculated_from_inp
             }
         },
     )
-    add_order_mock = mocked_responses.post(
-        url="https://api.kraken.com/0/private/AddOrder",
-        match=[
-            matchers.urlencoded_params_matcher(
-                {
-                    "nonce": expected_nonce,
-                    "ordertype": "limit",
-                    "pair": trading_pair,
-                    "price": expected_bid_price,
-                    "type": "buy",
-                    "volume": expected_trade_volume,
-                }
-            )
-        ],
-    )
     mocker.patch("time.time", return_value=current_time)
     place_limit_order_on_kraken(
         trading_pair=trading_pair,
@@ -70,7 +62,14 @@ def test_that_calls_to_kraken_endpoints_are_made_with_values_calculated_from_inp
         public_key="111",
     )
 
-    assert add_order_mock.call_count == 1
+    calls = get_calls_to_responses("POST", "https://api.kraken.com/0/private/AddOrder")
+    assert len(calls) == 1
+    assert calls[0].request_urlencoded_body["nonce"] == [expected_nonce]
+    assert calls[0].request_urlencoded_body["ordertype"] == ["limit"]
+    assert calls[0].request_urlencoded_body["pair"] == [trading_pair]
+    assert calls[0].request_urlencoded_body["price"] == [expected_bid_price]
+    assert calls[0].request_urlencoded_body["type"] == ["buy"]
+    assert calls[0].request_urlencoded_body["volume"] == [expected_trade_volume]
 
 
 @pytest.mark.parametrize(
@@ -106,6 +105,7 @@ def test_that_call_to_private_kraken_endpoint_is_made_with_required_auth_headers
     private_key,
     expected_api_Sign,
     public_key,
+    get_calls_to_responses,
 ):
     mocked_responses.get(
         url=f"https://api.kraken.com/0/public/Ticker?pair={trading_pair}",
@@ -117,14 +117,6 @@ def test_that_call_to_private_kraken_endpoint_is_made_with_required_auth_headers
             }
         },
     )
-    add_order_mock = mocked_responses.post(
-        url="https://api.kraken.com/0/private/AddOrder",
-        match=[
-            matchers.header_matcher(
-                {"API-Key": public_key, "API-Sign": expected_api_Sign}
-            )
-        ],
-    )
 
     mocker.patch("time.time", return_value=current_time)
 
@@ -135,4 +127,7 @@ def test_that_call_to_private_kraken_endpoint_is_made_with_required_auth_headers
         public_key=public_key,
     )
 
-    assert add_order_mock.call_count == 1
+    calls = get_calls_to_responses("POST", "https://api.kraken.com/0/private/AddOrder")
+    assert len(calls) == 1
+    assert calls[0].request_headers["API-Key"] == public_key
+    assert calls[0].request_headers["API-Sign"] == expected_api_Sign

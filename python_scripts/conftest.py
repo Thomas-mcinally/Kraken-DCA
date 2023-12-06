@@ -3,6 +3,7 @@ import json
 from typing import Union
 import pytest
 import responses
+from urllib.parse import parse_qs
 
 
 @dataclass
@@ -10,7 +11,8 @@ class ResponsesCall:
     request_method: str
     request_url: str
     request_headers: dict
-    request_json: Union[dict, None] = None
+    request_json_body: Union[dict, None] = None
+    request_urlencoded_body: Union[str, None] = None
 
 
 @pytest.fixture
@@ -20,8 +22,12 @@ def get_calls_to_responses(mocked_responses):
             ResponsesCall(
                 request_method=method,
                 request_url=url,
-                request_json=json.loads(call.request.body.decode("utf-8"))
+                request_json_body=json.loads(call.request.body.decode("utf-8"))
                 if call.request.headers.get("Content-Type", "") == "application/json"
+                else None,
+                request_urlencoded_body=parse_qs(call.request.body)
+                if call.request.headers.get("Content-Type", "")
+                == "application/x-www-form-urlencoded"
                 else None,
                 request_headers=call.request.headers,
             )
