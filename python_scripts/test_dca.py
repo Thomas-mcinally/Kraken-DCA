@@ -2,13 +2,6 @@ from dca import place_limit_order_on_kraken
 import pytest
 
 
-@pytest.fixture(autouse=True)
-def setup_default_handlers(mocked_responses):
-    mocked_responses.post(
-        url="https://api.kraken.com/0/private/AddOrder",
-    )
-
-
 @pytest.mark.parametrize(
     "trading_pair, current_market_bid, budget, current_time, expected_nonce, expected_bid_price, expected_trade_volume",
     [

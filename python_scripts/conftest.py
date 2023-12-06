@@ -44,3 +44,13 @@ def get_calls_to_responses(mocked_responses):
 def mocked_responses():
     with responses.RequestsMock(assert_all_requests_are_fired=False) as rsps:
         yield rsps
+
+
+@pytest.fixture(autouse=True)
+def setup_default_handlers(mocked_responses):
+    mocked_responses.post(
+        url="https://api.kraken.com/0/private/AddOrder",
+    )
+    mocked_responses.post(
+        url="https://api.kraken.com/0/private/Withdraw",
+    )

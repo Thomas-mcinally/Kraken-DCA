@@ -18,6 +18,7 @@ def test_that_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_value
     asset_to_withdraw,
     withdrawal_address_key,
     current_balance,
+    get_calls_to_responses,
 ):
     mocked_responses.post(
         url="https://api.kraken.com/0/private/Balance",
@@ -25,19 +26,6 @@ def test_that_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_value
         json={"result": {asset_to_withdraw: current_balance}, "error": []},
     )
 
-    withdrawal_endpoint_mock = mocked_responses.post(
-        url="https://api.kraken.com/0/private/Withdraw",
-        match=[
-            matchers.urlencoded_params_matcher(
-                {
-                    "nonce": expected_nonce,
-                    "asset": asset_to_withdraw,
-                    "key": withdrawal_address_key,
-                    "amount": current_balance,
-                }
-            )
-        ],
-    )
     mocker.patch("time.time", return_value=current_time)
 
     withdraw_crypto_from_kraken(
@@ -46,47 +34,36 @@ def test_that_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_value
         private_key="kQH5HW/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==",
         public_key="fake123",
     )
-    assert withdrawal_endpoint_mock.call_count == 1
+    calls = get_calls_to_responses("POST", "https://api.kraken.com/0/private/Withdraw")
+    assert len(calls) == 1
+    assert calls[0].request_urlencoded_body["nonce"] == [expected_nonce]
+    assert calls[0].request_urlencoded_body["asset"] == [asset_to_withdraw]
+    assert calls[0].request_urlencoded_body["key"] == [withdrawal_address_key]
+    assert calls[0].request_urlencoded_body["amount"] == [current_balance]
 
 
 @pytest.mark.parametrize(
-    "time_of_first_api_call, expected_nonce_of_first_api_call,time_of_second_api_call, expected_nonce_of_second_api_call",
+    "time_of_first_api_call,time_of_second_api_call",
     [
-        (1.111, "1111", 2.222, "2222"),
-        (3.333, "3333", 4.444, "4444"),
+        (1.111, 2.222),
+        (
+            3.333,
+            4.444,
+        ),
     ],
 )
 def test_that_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_different_nonces(
     mocked_responses,
     mocker,
     time_of_first_api_call,
-    expected_nonce_of_first_api_call,
     time_of_second_api_call,
-    expected_nonce_of_second_api_call,
+    get_calls_to_responses,
 ):
-    balance_endpoint_mock = mocked_responses.post(
+    mocked_responses.post(
         url="https://api.kraken.com/0/private/Balance",
-        match=[
-            matchers.urlencoded_params_matcher(
-                {"nonce": expected_nonce_of_first_api_call}
-            )
-        ],
         json={"result": {"ETH": "10"}, "error": []},
     )
 
-    withdrawal_endpoint_mock = mocked_responses.post(
-        url="https://api.kraken.com/0/private/Withdraw",
-        match=[
-            matchers.urlencoded_params_matcher(
-                {
-                    "nonce": expected_nonce_of_second_api_call,
-                    "asset": "ETH",
-                    "key": "eth_wallet",
-                    "amount": "10",
-                }
-            )
-        ],
-    )
     mocker.patch(
         "time.time",
         side_effect=(
@@ -110,8 +87,18 @@ def test_that_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_diffe
         public_key="fake123",
     )
 
-    assert balance_endpoint_mock.call_count == 1
-    assert withdrawal_endpoint_mock.call_count == 1
+    balance_calls = get_calls_to_responses(
+        "POST", "https://api.kraken.com/0/private/Balance"
+    )
+    withdrawal_calls = get_calls_to_responses(
+        "POST", "https://api.kraken.com/0/private/Withdraw"
+    )
+    assert len(balance_calls) == 1
+    assert len(withdrawal_calls) == 1
+    assert (
+        balance_calls[0].request_urlencoded_body["nonce"]
+        != withdrawal_calls[0].request_urlencoded_body["nonce"]
+    )
 
 
 @pytest.mark.parametrize(
@@ -132,19 +119,17 @@ def test_that_calls_to_kraken_balance_and_withdraw_endpoints_are_made_with_diffe
     ],
 )
 def test_that_call_to_balances_endpoint_is_made_with_required_auth_headers(
-    mocked_responses, mocker, current_time, private_key, public_key, expected_api_Sign
+    mocked_responses,
+    mocker,
+    current_time,
+    private_key,
+    public_key,
+    expected_api_Sign,
+    get_calls_to_responses,
 ):
-    balance_endpoint_mock = mocked_responses.post(
-        url="https://api.kraken.com/0/private/Balance",
-        match=[
-            matchers.header_matcher(
-                {"API-Key": public_key, "API-Sign": expected_api_Sign}
-            )
-        ],
-        json={"result": {"BTC": "11"}, "error": []},
-    )
     mocked_responses.post(
-        url="https://api.kraken.com/0/private/Withdraw",
+        url="https://api.kraken.com/0/private/Balance",
+        json={"result": {"BTC": "11"}, "error": []},
     )
     mocker.patch("time.time", return_value=current_time)
 
@@ -155,7 +140,12 @@ def test_that_call_to_balances_endpoint_is_made_with_required_auth_headers(
         public_key=public_key,
     )
 
-    assert balance_endpoint_mock.call_count == 1
+    balance_calls = get_calls_to_responses(
+        "POST", "https://api.kraken.com/0/private/Balance"
+    )
+    assert len(balance_calls) == 1
+    assert balance_calls[0].request_headers["API-Key"] == public_key
+    assert balance_calls[0].request_headers["API-Sign"] == expected_api_Sign
 
 
 @pytest.mark.parametrize(
@@ -191,18 +181,11 @@ def test_that_call_to_withdraw_endpoint_is_made_with_required_auth_headers(
     withdrawal_address_key,
     current_balance,
     expected_api_sign,
+    get_calls_to_responses,
 ):
     mocked_responses.post(
         url="https://api.kraken.com/0/private/Balance",
         json={"result": {asset_to_withdraw: current_balance}, "error": []},
-    )
-    withdrawal_endpoint_mock = mocked_responses.post(
-        url="https://api.kraken.com/0/private/Withdraw",
-        match=[
-            matchers.header_matcher(
-                {"API-Key": public_key, "API-Sign": expected_api_sign}
-            )
-        ],
     )
 
     mocker.patch("time.time", return_value=current_time)
@@ -214,4 +197,9 @@ def test_that_call_to_withdraw_endpoint_is_made_with_required_auth_headers(
         public_key=public_key,
     )
 
-    assert withdrawal_endpoint_mock.call_count == 1
+    withdrawal_calls = get_calls_to_responses(
+        "POST", "https://api.kraken.com/0/private/Withdraw"
+    )
+    assert len(withdrawal_calls) == 1
+    assert withdrawal_calls[0].request_headers["API-Key"] == public_key
+    assert withdrawal_calls[0].request_headers["API-Sign"] == expected_api_sign
