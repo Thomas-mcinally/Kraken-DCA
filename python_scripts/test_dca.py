@@ -6,7 +6,7 @@ from responses import matchers
 
 @pytest.fixture
 def mocked_responses():
-    with responses.RequestsMock() as rsps:
+    with responses.RequestsMock(assert_all_requests_are_fired=False) as rsps:
         yield rsps
 
 
@@ -54,7 +54,7 @@ def test_that_calls_to_kraken_endpoints_are_made_with_values_calculated_from_inp
             }
         },
     )
-    mocked_responses.post(
+    add_order_mock = mocked_responses.post(
         url="https://api.kraken.com/0/private/AddOrder",
         match=[
             matchers.urlencoded_params_matcher(
@@ -76,6 +76,8 @@ def test_that_calls_to_kraken_endpoints_are_made_with_values_calculated_from_inp
         private_key="kQH5HW/8p1uGOVjbgWA7FunAmGO8lsSUXNsu3eow76sz84Q18fWxnyRzBHCd3pd5nE9qa99HAZtuZuj6F1huXg==",
         public_key="111",
     )
+
+    assert add_order_mock.call_count == 1
 
 
 @pytest.mark.parametrize(
@@ -122,7 +124,7 @@ def test_that_call_to_private_kraken_endpoint_is_made_with_required_auth_headers
             }
         },
     )
-    mocked_responses.post(
+    add_order_mock = mocked_responses.post(
         url="https://api.kraken.com/0/private/AddOrder",
         match=[
             matchers.header_matcher(
@@ -139,3 +141,5 @@ def test_that_call_to_private_kraken_endpoint_is_made_with_required_auth_headers
         private_key=private_key,
         public_key=public_key,
     )
+
+    assert add_order_mock.call_count == 1
