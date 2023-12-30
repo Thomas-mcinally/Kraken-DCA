@@ -12,7 +12,7 @@ class ResponsesCall:
     request_url: str
     request_headers: dict
     request_json_body: Union[dict, None] = None
-    request_urlencoded_body: Union[str, None] = None
+    request_urlencoded_body: Union[dict, None] = None
 
 
 @pytest.fixture
