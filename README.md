@@ -11,7 +11,7 @@
 - AWS SSM used to store API keys and purchase budget, accessed from Lambda function
 - AWS S3 bucket used to store Terraform remote state (enables CI/CD pipeline)
 - NAT instance has constant IP address (enables IP whitelisting for API keys)
-  - Have removed this from Main because EC2 is expensive if no AWS free tier. See branch if want this.
+  - Have removed this from Main because EC2 is expensive if no AWS free tier. See branch `add-nat-for-IP-whitelisting` if want this.
   - Use NAT instance instead of NAT gateway because it is much cheaper and within AWS free tier
 
 
