@@ -1,7 +1,7 @@
 # Kraken-DCA
 - Serverless application that automates recurring purchases of crypto on Kraken Exchange
   - Works for any cryptocurrency available on Kraken, and any desired purchase interval
-- Made so that it is easy for you to **run in your own AWS account**, using the AWS free tier 
+- Made so that it is easy for you to **run in your own AWS account**, using only free AWS resources
 - 90% reduction in trading fees as compared to using the built-in recurring purchase feature in the Kraken mobile app
 
 
